@@ -4,277 +4,113 @@
 <meta charset="UTF-8">
 <title>SPC-Straddle Carrier KPI Calculator</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
 <style>
-body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef5f8;color:#0f172a}
-.page{max-width:1350px;margin:35px auto;padding:20px}
-.header{background:linear-gradient(135deg,#003b5c,#0077a3);color:white;padding:30px;border-radius:22px;margin-bottom:24px}
-.header h1{margin:0;font-size:32px}
-.header p{margin:8px 0 0;color:#dff7ff}
-.card{background:white;padding:24px;border-radius:20px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
-.controls{display:grid;grid-template-columns:minmax(320px,1fr) 180px 180px 220px 180px;gap:16px;align-items:end}
-.controls>div{min-width:0}
-label{font-weight:700;font-size:14px;display:block;margin-bottom:8px}
-input,select,button{width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1px solid #d1d5db;font-size:14px}
-button{background:#ff6b00;color:white;border:none;font-weight:800;cursor:pointer}
-button:hover{background:#e85f00}
-.status{margin-top:12px;font-weight:700;color:#475569}
-.kpi-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:16px;
-align-items:stretch;
-}
-
-@media(max-width:1100px){
-.kpi-grid{
-grid-template-columns:repeat(2,1fr);
-}
-}
-
-@media(max-width:700px){
-.kpi-grid{
-grid-template-columns:1fr;
-}
-}
-.ops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:24px}
-.metric,.ops-metric{background:#f8fafc;border:1px solid #e5e7eb;border-radius:16px;padding:18px}
-.ops-metric{background:linear-gradient(135deg,#f8fafc,#eef7fb);border-left:5px solid #ff6b00}
-.metric-title,.ops-title{color:#64748b;font-weight:700;font-size:13px}
-.metric-value,.ops-value{font-size:30px;font-weight:900;color:#003b5c;margin-top:8px}
-.details-btn{margin-top:14px;background:#003b5c}
-.details-btn:hover{background:#002b43}
-.hidden{display:none}
-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
-th{background:#003b5c;color:white;padding:10px;text-align:left}
-td{padding:9px;border-bottom:1px solid #e5e7eb}
-.bar-wrap{background:#e5e7eb;height:10px;border-radius:999px;overflow:hidden}
-.bar{height:100%;background:linear-gradient(90deg,#00a3ad,#ff6b00)}
-.good{color:#15803d;font-weight:900}
-.bad{color:#b91c1c;font-weight:900}
-.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.small-note{color:#64748b;font-size:13px;margin-top:6px}
-@media(max-width:1000px){.controls{grid-template-columns:1fr}}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef5f8;color:#0f172a}.page{max-width:1350px;margin:35px auto;padding:20px}.header{background:linear-gradient(135deg,#003b5c,#0077a3);color:white;padding:30px;border-radius:22px;margin-bottom:24px}.header h1{margin:0;font-size:32px}.header p{margin:8px 0 0;color:#dff7ff}.card{background:white;padding:24px;border-radius:20px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,.08)}.controls{display:grid;grid-template-columns:minmax(260px,1fr) 130px 130px 190px 130px 130px 170px;gap:16px;align-items:end}.controls>div{min-width:0}label{font-weight:700;font-size:14px;display:block;margin-bottom:8px}input,select,button{width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1px solid #d1d5db;font-size:14px}button{background:#ff6b00;color:white;border:none;font-weight:800;cursor:pointer}button:hover{background:#e85f00}.status{margin-top:12px;font-weight:700;color:#475569}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:stretch}@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.kpi-grid{grid-template-columns:1fr}}.ops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:24px}.metric,.ops-metric{background:#f8fafc;border:1px solid #e5e7eb;border-radius:16px;padding:18px}.ops-metric{background:linear-gradient(135deg,#f8fafc,#eef7fb);border-left:5px solid #ff6b00}.metric-title,.ops-title{color:#64748b;font-weight:700;font-size:13px}.metric-value,.ops-value{font-size:30px;font-weight:900;color:#003b5c;margin-top:8px}.details-btn{margin-top:14px;background:#003b5c}.details-btn:hover{background:#002b43}.hidden{display:none}table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}th{background:#003b5c;color:white;padding:10px;text-align:left}td{padding:9px;border-bottom:1px solid #e5e7eb}.bar-wrap{background:#e5e7eb;height:10px;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#00a3ad,#ff6b00)}.good{color:#15803d;font-weight:900}.bad{color:#b91c1c;font-weight:900}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px}.small-note{color:#64748b;font-size:13px;margin-top:6px}@media(max-width:1200px){.controls{grid-template-columns:1fr 1fr}}@media(max-width:700px){.controls{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
 <div class="page">
-
-<div class="header">
-<h1>SPC-Straddle Carrier KPI Calculator</h1>
-<p>Terminals Covered SEGOT & DKAAR </p>
-</div>
-
-<div class="card">
-<div class="controls">
-
-<div>
-<label>Upload Work Instruction File</label>
-<input type="file" id="fileInput" accept=".txt,.csv,.xlsx,.xls">
-</div>
-
-<div>
-<label>Terminal</label>
-<select id="terminal">
-<option value="SEGOT">SEGOT</option>
-<option value="DKAAR">DKAAR</option>
-</select>
-</div>
-
-<div>
-<label>Vessel Side</label>
-<select id="side">
-<option value="starboard">Starboard</option>
-<option value="portside">Portside</option>
-</select>
-</div>
-
-<div>
-<label>Rows Evacuation Scenario</label>
-<select id="rowsScenario">
-<option value="1">Scenario 1 - First Entry</option>
-<option value="2">Scenario 2 - Biggest Entry</option>
-</select>
-</div>
-
-<div>
-<button onclick="processFile()">Calculate KPIs</button>
-</div>
-
+<div class="header"><h1>SPC-Straddle Carrier KPI Calculator</h1><p>Terminals Covered SEGOT & DKAAR</p></div>
+<div class="card"><div class="controls">
+<div><label>Upload Work Instruction File</label><input type="file" id="fileInput" accept=".txt,.csv,.xlsx,.xls"></div>
+<div><label>Terminal</label><select id="terminal"><option value="SEGOT">SEGOT</option><option value="DKAAR">DKAAR</option></select></div>
+<div><label>Vessel Side</label><select id="side"><option value="starboard">Starboard</option><option value="portside">Portside</option></select></div>
+<div><label>Rows Evacuation Scenario</label><select id="rowsScenario"><option value="1">Scenario 1 - First Entry</option><option value="2">Scenario 2 - Biggest Entry</option></select></div>
+<div><label>Alternation Ratio 20ft</label><input type="number" id="ratio20" value="3" min="2"></div>
+<div><label>Alternation Ratio 40ft</label><input type="number" id="ratio40" value="3" min="2"></div>
+<div><button onclick="processFile()">Calculate KPIs</button></div>
 </div>
 <div id="status" class="status">Waiting for file upload...</div>
-</div>
-
-<div id="summaryCard" class="card hidden">
-<h2>Operational Summary</h2>
-
-<div class="ops-grid">
-<div class="ops-metric"><div class="ops-title">Total Moves</div><div class="ops-value" id="totalMoves">0</div></div>
-<div class="ops-metric"><div class="ops-title">Total Load</div><div class="ops-value" id="totalLoad">0</div></div>
-<div class="ops-metric"><div class="ops-title">Total Discharge</div><div class="ops-value" id="totalDischarge">0</div></div>
-<div class="ops-metric"><div class="ops-title">Total Restows</div><div class="ops-value" id="totalRestows">0</div></div>
-<div class="ops-metric"><div class="ops-title">Operations Hours</div><div class="ops-value" id="operationsHours">0.0</div></div>
-</div>
-
-<h2>KPI Summary</h2>
-
-<div class="kpi-grid">
-
-<div class="metric">
-<div class="metric-title">Yard Mirroring KPI</div>
+<div id="summaryCard" class="card hidden"><h2>Operational Summary</h2><div class="ops-grid">
+<div class="ops-metric"><div class="ops-title">Total Moves</div>
+<div class="ops-value" id="totalMoves">0</div></div>
+<div class="ops-metric"><div class="ops-title">Total Load</div>
+<div class="ops-value" id="totalLoad">0</div></div>
+<div class="ops-metric"><div class="ops-title">Total Discharge</div>
+<div class="ops-value" id="totalDischarge">0</div></div>
+<div class="ops-metric"><div class="ops-title">Total Restows</div>
+<div class="ops-value" id="totalRestows">0</div></div>
+<div class="ops-metric"><div class="ops-title">Operations Hours</div>
+<div class="ops-value" id="operationsHours">0.0</div></div>
+</div><h2>KPI Summary</h2><div class="kpi-grid">
+<div class="metric"><div class="metric-title">Yard Mirroring KPI</div>
 <div class="metric-value" id="yardKPI">0.00%</div>
-<div class="small-note" id="yardMoves">Valid moves: 0</div>
-<button class="details-btn" onclick="toggleDetails('yardDetails')">Show / Hide Details</button>
-</div>
-
-<div class="metric">
-<div class="metric-title">Avg Loading Points</div>
+<div class="small-note" id="yardMoves">Valid moves: 0</div><button class="details-btn" onclick="toggleDetails('yardDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Avg Loading Points</div>
 <div class="metric-value" id="loadingKPI">0.00</div>
-<div class="small-note" id="loadingObs">Hour + QC observations: 0</div>
-<button class="details-btn" onclick="toggleDetails('loadingDetails')">Show / Hide Details</button>
-</div>
-
-<div class="metric">
-<div class="metric-title">Twin Planning KPI</div>
+<div class="small-note" id="loadingObs">Hour + QC observations: 0</div><button class="details-btn" onclick="toggleDetails('loadingDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Twin Planning KPI</div>
 <div class="metric-value" id="twinKPI">0.00%</div>
-<div class="small-note" id="twinObs">Opportunities: 0 | Planned: 0</div>
-<button class="details-btn" onclick="toggleDetails('twinDetails')">Show / Hide Details</button>
-</div>
-
-<div class="metric">
-<div class="metric-title">Rehandles KPI</div>
+<div class="small-note" id="twinObs">Opportunities: 0 | Planned: 0</div><button class="details-btn" onclick="toggleDetails('twinDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Rehandles KPI</div>
 <div class="metric-value" id="rehandlesKPI">0.00%</div>
-<div class="small-note" id="rehandlesObs">Load from Yard: 0 | Rehandles: 0</div>
-<button class="details-btn" onclick="toggleDetails('rehandlesDetails')">Show / Hide Details</button>
-</div>
-
-<div class="metric">
-<div class="metric-title">Average Traveling Distance</div>
+<div class="small-note" id="rehandlesObs">Load from Yard: 0 | Rehandles: 0</div><button class="details-btn" onclick="toggleDetails('rehandlesDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Average Traveling Distance</div>
 <div class="metric-value" id="travelDistanceKPI">0.00</div>
-<div class="small-note" id="travelDistanceObs">Containers considered: 0</div>
-<button class="details-btn" onclick="toggleDetails('travelDistanceDetails')">Show / Hide Details</button>
-</div>
-
-<div class="metric">
-<div class="metric-title">Rows Evacuation KPI</div>
+<div class="small-note" id="travelDistanceObs">Containers considered: 0</div><button class="details-btn" onclick="toggleDetails('travelDistanceDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Rows Evacuation KPI</div>
 <div class="metric-value" id="rowsEvacuationKPI">0.00%</div>
-<div class="small-note" id="rowsEvacuationObs">Rows considered: 0</div>
-<button class="details-btn" onclick="toggleDetails('rowsEvacuationDetails')">Show / Hide Details</button>
-</div>
-
-<div class="metric">
-<div class="metric-title">Stacks Evacuation KPI</div>
+<div class="small-note" id="rowsEvacuationObs">Rows considered: 0</div><button class="details-btn" onclick="toggleDetails('rowsEvacuationDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Stacks Evacuation KPI</div>
 <div class="metric-value" id="stacksEvacuationKPI">0.00%</div>
-<div class="small-note" id="stacksEvacuationObs">Stacks considered: 0</div>
-<button class="details-btn" onclick="toggleDetails('stacksEvacuationDetails')">Show / Hide Details</button>
-</div>
-
-<div class="metric">
-<div class="metric-title">Yard Clashes KPI</div>
+<div class="small-note" id="stacksEvacuationObs">Stacks considered: 0</div><button class="details-btn" onclick="toggleDetails('stacksEvacuationDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Yard Clashes KPI</div>
 <div class="metric-value" id="yardClashesKPI">0.00%</div>
-<div class="small-note" id="yardClashesObs">Total Rows: 0 | Rows Clashed: 0</div>
-<button class="details-btn" onclick="toggleDetails('yardClashesDetails')">Show / Hide Details</button>
+<div class="small-note" id="yardClashesObs">Total Rows: 0 | Rows Clashed: 0</div><button class="details-btn" onclick="toggleDetails('yardClashesDetails')">Show / Hide Details</button></div>
+<div class="metric"><div class="metric-title">Alternation KPI</div>
+<div class="metric-value" id="alternationKPI">0.00%</div>
+<div class="small-note" id="alternationObs">Load from Yard: 0 | AltCount: 0</div><button class="details-btn" onclick="toggleDetails('alternationDetails')">Show / Hide Details</button></div>
+</div></div>
+<div id="yardDetails" class="card hidden"><h2>Yard Mirroring Details by Block</h2>
+<table><thead><tr><th>Block</th><th>Mirrored</th><th>Total</th><th>Mirroring %</th><th>Visual</th></tr></thead><tbody id="yardTable"></tbody></table></div>
+<div id="loadingDetails" class="card hidden"><h2>Loading Points Details</h2>
+<table><thead><tr><th>Hour</th><th>QC</th><th>Distinct Yard Blocks</th><th>Block_Rows</th></tr></thead><tbody id="loadingTable"></tbody></table></div>
+<div id="twinDetails" class="card hidden"><h2>Twin Planning Details</h2>
+<table><thead><tr><th>Status</th><th>Container 1</th><th>Move From 1</th><th>Move To 1</th><th>Queue 1</th><th>Seq 1</th><th>Container 2</th><th>Move From 2</th><th>Move To 2</th><th>Queue 2</th><th>Seq 2</th></tr></thead><tbody id="twinTable"></tbody></table></div>
+<div id="rehandlesDetails" class="card hidden"><h2>Rehandles Details</h2>
+<table><thead><tr><th>Block Row/Bay</th><th>Rehandled Container</th><th>Rehandle Reason</th></tr></thead><tbody id="rehandlesTable"></tbody></table></div>
+<div id="travelDistanceDetails" class="card hidden"><h2>Average Traveling Distance Details by Yard Block</h2>
+<table><thead><tr><th>Carrier</th><th>Yard Block</th><th>Containers</th><th>Average of Distance</th></tr></thead><tbody id="travelDistanceTable"></tbody></table></div>
+<div id="rowsEvacuationDetails" class="card hidden"><h2>Rows Evacuation Details</h2>
+<table><thead><tr><th>Row / Block</th><th>Total Containers</th><th>Gap Threshold</th><th>Evacuated Containers</th><th>Evacuation %</th></tr></thead><tbody id="rowsEvacuationTable"></tbody></table></div>
+<div id="stacksEvacuationDetails" class="card hidden"><h2>Stacks Evacuation Details</h2>
+<table><thead><tr><th>Stack / Block Row Bay</th><th>Total Containers</th><th>Gap Threshold</th><th>Evacuated Containers</th><th>Evacuation %</th></tr></thead><tbody id="stacksEvacuationTable"></tbody></table></div>
+<div id="yardClashesDetails" class="card hidden"><h2>Yard Clashes Details</h2>
+<table><thead><tr><th>Quarter Hour</th><th>Rows Clashed</th></tr></thead><tbody id="yardClashesTable"></tbody></table></div>
+<div id="alternationDetails" class="card hidden"><h2>Alternation per Queue</h2>
+<table><thead><tr><th>Vessel ID</th><th>Vessel Name</th><th>Queue / Vessel Bay Deck Lift</th><th>Length</th><th>Ratio Used</th><th>Moves</th><th>AltCount</th><th>Alternation %</th></tr></thead><tbody id="alternationQueueTable"></tbody></table><h2 style="margin-top:28px">Alternation Details</h2>
+<table><thead><tr><th>Vessel ID</th><th>Queue</th><th>Sequence</th><th>Yard Position</th><th>Yard Row</th><th>Length</th><th>Compared With</th><th>Alternated?</th></tr></thead><tbody id="alternationDetailTable"></tbody></table></div>
 </div>
-
-</div>
-</div>
-
-<div id="yardDetails" class="card hidden">
-<h2>Yard Mirroring Details by Block</h2>
-<table><thead><tr><th>Block</th><th>Mirrored</th><th>Total</th><th>Mirroring %</th><th>Visual</th></tr></thead><tbody id="yardTable"></tbody></table>
-</div>
-
-<div id="loadingDetails" class="card hidden">
-<h2>Loading Points Details</h2>
-<table><thead><tr><th>Hour</th><th>QC</th><th>Distinct Yard Blocks</th><th>Block_Rows</th></tr></thead><tbody id="loadingTable"></tbody></table>
-</div>
-
-<div id="twinDetails" class="card hidden">
-<h2>Twin Planning Details</h2>
-<table><thead><tr><th>Status</th><th>Container 1</th><th>Move From 1</th><th>Move To 1</th><th>Queue 1</th><th>Seq 1</th><th>Container 2</th><th>Move From 2</th><th>Move To 2</th><th>Queue 2</th><th>Seq 2</th></tr></thead><tbody id="twinTable"></tbody></table>
-</div>
-
-<div id="rehandlesDetails" class="card hidden">
-<h2>Rehandles Details</h2>
-<table><thead><tr><th>Block Row/Bay</th><th>Rehandled Container</th><th>Rehandle Reason</th></tr></thead><tbody id="rehandlesTable"></tbody></table>
-</div>
-
-<div id="travelDistanceDetails" class="card hidden">
-<h2>Average Traveling Distance Details by Yard Block</h2>
-<table><thead><tr><th>Carrier</th><th>Yard Block</th><th>Containers</th><th>Average of Distance</th></tr></thead><tbody id="travelDistanceTable"></tbody></table>
-</div>
-
-<div id="rowsEvacuationDetails" class="card hidden">
-<h2>Rows Evacuation Details</h2>
-<table><thead><tr><th>Row / Block</th><th>Total Containers</th><th>Gap Threshold</th><th>Evacuated Containers</th><th>Evacuation %</th></tr></thead><tbody id="rowsEvacuationTable"></tbody></table>
-</div>
-
-<div id="stacksEvacuationDetails" class="card hidden">
-<h2>Stacks Evacuation Details</h2>
-<table><thead><tr><th>Stack / Block Row Bay</th><th>Total Containers</th><th>Gap Threshold</th><th>Evacuated Containers</th><th>Evacuation %</th></tr></thead><tbody id="stacksEvacuationTable"></tbody></table>
-</div>
-
-<div id="yardClashesDetails" class="card hidden">
-<h2>Yard Clashes Details</h2>
-<table><thead><tr><th>Quarter Hour</th><th>Rows Clashed</th></tr></thead><tbody id="yardClashesTable"></tbody></table>
-</div>
-
-</div>
-
 <script>
+
 const SEGOT_YARD_ORDER=["BQ","BB","CC","AA","DD","TP","EE","TB","BA","FF","GG","CJ","ZZ","HH","KK","LL","MM","VV","XX"];
+
 const DKAAR_NORMAL_BLOCK_ORDER=["L","OGI","I","H","G","G2","F","F2","E","D","C","OGB","B","OGA","A"];
+
 const DKAAR_REEFER_BLOCK_ORDER=["RS","RM","RN"];
-
-function normalize(v){return String(v ?? "").trim();}
-function clean(v){return normalize(v).replace(/\s+/g,"");}
-function isTrue(v){return ["true","yes","1","y"].includes(normalize(v).toLowerCase());}
-function escapeHtml(v){return normalize(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
-function toggleDetails(id){document.getElementById(id).classList.toggle("hidden");}
-function getValue(row,names){for(const n of names){if(row[n]!==undefined)return row[n];}return "";}
-function getNumber(v){const n=Number(v);return isNaN(n)?0:n;}
-function getContainer(row){return normalize(row["Conatiner Number"]||row["Container Number"]||row["Unit Nbr"]||row["Unit Number"]||row["Container No."]);}
-
+function normalize(v){return String(v ?? "").trim();}function clean(v){return normalize(v).replace(/\s+/g,"");}function isTrue(v){return ["true","yes","1","y"].includes(normalize(v).toLowerCase());}function escapeHtml(v){return normalize(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}function toggleDetails(id){document.getElementById(id).classList.toggle("hidden");}function getValue(row,names){for(
+const n of names){if(row[n]!==undefined)return row[n];}return "";}function getNumber(v){
+const n=Number(v);return isNaN(n)?0:n;}function getContainer(row){return normalize(row["Conatiner Number"]||row["Container Number"]||row["Unit Nbr"]||row["Unit Number"]||row["Container No."]);}
 function processFile(){
-const file=document.getElementById("fileInput").files[0];
-if(!file){alert("Please upload the WI file.");return;}
-document.getElementById("status").innerText="Reading file...";
+const file=document.getElementById("fileInput").files[0];if(!file){alert("Please upload the WI file.");return;}document.getElementById("status").innerText="Reading file...";
 const reader=new FileReader();
-const name=file.name.toLowerCase();
-if(name.endsWith(".xlsx")||name.endsWith(".xls")){
-reader.onload=e=>{
+const name=file.name.toLowerCase();if(name.endsWith(".xlsx")||name.endsWith(".xls")){reader.onload=e=>{
 const data=new Uint8Array(e.target.result);
 const wb=XLSX.read(data,{type:"array"});
 const sheet=wb.Sheets[wb.SheetNames[0]];
-const rows=XLSX.utils.sheet_to_json(sheet,{defval:""});
-runAllKPIs(rows);
-};
-reader.readAsArrayBuffer(file);
-}else{
-reader.onload=e=>runAllKPIs(parseText(e.target.result));
-reader.readAsText(file);
-}
-}
-
+const rows=XLSX.utils.sheet_to_json(sheet,{defval:""});runAllKPIs(rows);};reader.readAsArrayBuffer(file);}else{reader.onload=e=>runAllKPIs(parseText(e.target.result));reader.readAsText(file);}}
 function parseText(text){
 const lines=text.split(/\r?\n/).filter(l=>l.trim());
-const headers=lines[0].split("\t").map(h=>h.trim());
-return lines.slice(1).map(line=>{
+const headers=lines[0].split("\t").map(h=>h.trim());return lines.slice(1).map(line=>{
 const values=line.split("\t");
-const obj={};
-headers.forEach((h,i)=>obj[h]=values[i]??"");
-return obj;
-});
-}
-
+const obj={};headers.forEach((h,i)=>obj[h]=values[i]??"");return obj;});}
 function runAllKPIs(rows){
 const terminal=document.getElementById("terminal").value;
 const side=document.getElementById("side").value;
 const scenario=document.getElementById("rowsScenario").value;
-
+const ratio20=Number(document.getElementById("ratio20").value);
+const ratio40=Number(document.getElementById("ratio40").value);if(ratio20<2||ratio40<2){alert("Alternation ratio must be 2 or above.");return;}
 const funcs=terminal==="DKAAR"?DKAAR:SEGOT;
-
 const ops=calculateOperationalSummary(rows);
 const yard=funcs.yardMirroring(rows,side);
 const loading=funcs.loadingPoints(rows);
@@ -284,72 +120,23 @@ const travelDistance=funcs.travelDistance(rows);
 const rowsEvacuation=funcs.rowsEvacuation(rows,scenario);
 const stacksEvacuation=funcs.stacksEvacuation(rows);
 const yardClashes=funcs.yardClashes(rows);
-
-renderOperationalSummary(ops);
-renderYard(yard);
-renderLoading(loading);
-renderTwin(twin);
-renderRehandles(rehandles);
-renderTravelDistance(travelDistance);
-renderRowsEvacuation(rowsEvacuation,scenario);
-renderStacksEvacuation(stacksEvacuation);
-renderYardClashes(yardClashes,terminal);
-
-document.getElementById("summaryCard").classList.remove("hidden");
-["yardDetails","loadingDetails","twinDetails","rehandlesDetails","travelDistanceDetails","rowsEvacuationDetails","stacksEvacuationDetails","yardClashesDetails"].forEach(id=>document.getElementById(id).classList.add("hidden"));
-document.getElementById("status").innerText="Calculation completed successfully for "+terminal+".";
-}
-
+const alternation=funcs.alternation(rows,ratio20,ratio40);renderOperationalSummary(ops);renderYard(yard);renderLoading(loading);renderTwin(twin);renderRehandles(rehandles);renderTravelDistance(travelDistance);renderRowsEvacuation(rowsEvacuation,scenario);renderStacksEvacuation(stacksEvacuation);renderYardClashes(yardClashes,terminal);renderAlternation(alternation);document.getElementById("summaryCard").classList.remove("hidden");["yardDetails","loadingDetails","twinDetails","rehandlesDetails","travelDistanceDetails","rowsEvacuationDetails","stacksEvacuationDetails","yardClashesDetails","alternationDetails"].forEach(id=>document.getElementById(id).classList.add("hidden"));document.getElementById("status").innerText="Calculation completed successfully for "+terminal+".";}
 function calculateOperationalSummary(rows){
 const validMoveRows=rows.filter(r=>{
-const mk=normalize(r["Move Kind"]).toLowerCase();
-return mk==="load"||mk==="discharge";
-});
+const mk=normalize(r["Move Kind"]).toLowerCase();return mk==="load"||mk==="discharge";});
 const totalMoves=validMoveRows.length;
 const totalLoad=validMoveRows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load").length;
 const totalDischarge=validMoveRows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="discharge").length;
 const totalRestows=validMoveRows.filter(r=>{
-const c=normalize(r["Category"]).toUpperCase();
-return c==="RESTOW"||c==="THROUGH";
-}).length;
+const c=normalize(r["Category"]).toUpperCase();return c==="RESTOW"||c==="THROUGH";}).length;
 const moveTimes=validMoveRows.map(r=>Number(r["Move Time"])).filter(v=>!Number.isNaN(v)&&v>0);
-let operationsHours=0;
-if(moveTimes.length>0){operationsHours=(Math.max(...moveTimes)-Math.min(...moveTimes))*24;}
-return{totalMoves,totalLoad,totalDischarge,totalRestows,operationsHours};
-}
-
-function renderOperationalSummary(r){
-document.getElementById("totalMoves").innerText=r.totalMoves.toLocaleString();
-document.getElementById("totalLoad").innerText=r.totalLoad.toLocaleString();
-document.getElementById("totalDischarge").innerText=r.totalDischarge.toLocaleString();
-document.getElementById("totalRestows").innerText=r.totalRestows.toLocaleString();
-document.getElementById("operationsHours").innerText=r.operationsHours.toFixed(1);
-}
-
-/* =========================
-   COMMON TIME
-========================= */
-
-function excelSerialDateToHour(value){
-if(value===null||value===undefined||value==="")return "";
-if(!isNaN(Number(value))){
+let operationsHours=0;if(moveTimes.length>0){operationsHours=(Math.max(...moveTimes)-Math.min(...moveTimes))*24;}return{totalMoves,totalLoad,totalDischarge,totalRestows,operationsHours};}
+function renderOperationalSummary(r){document.getElementById("totalMoves").innerText=r.totalMoves.toLocaleString();document.getElementById("totalLoad").innerText=r.totalLoad.toLocaleString();document.getElementById("totalDischarge").innerText=r.totalDischarge.toLocaleString();document.getElementById("totalRestows").innerText=r.totalRestows.toLocaleString();document.getElementById("operationsHours").innerText=r.operationsHours.toFixed(1);}
+function excelSerialDateToHour(value){if(value===null||value===undefined||value==="")return "";if(!isNaN(Number(value))){
 const excelEpoch=new Date(Date.UTC(1899,11,30));
-const date=new Date(excelEpoch.getTime()+Number(value)*24*60*60*1000);
-date.setUTCMinutes(0,0,0);
-return date.toISOString().slice(0,13);
-}
-const d=new Date(value);
-if(isNaN(d.getTime()))return normalize(value).slice(0,13);
-d.setMinutes(0,0,0);
-return d.toISOString().slice(0,13);
-}
-
-function excelSerialToDate(serial){
-const excelEpoch=new Date(Date.UTC(1899,11,30));
-return new Date(excelEpoch.getTime()+Number(serial)*24*60*60*1000);
-}
-
-function getQuarterHourKey(moveTime){
+const date=new Date(excelEpoch.getTime()+Number(value)*24*60*60*1000);date.setUTCMinutes(0,0,0);return date.toISOString().slice(0,13);}
+const d=new Date(value);if(isNaN(d.getTime()))return normalize(value).slice(0,13);d.setMinutes(0,0,0);return d.toISOString().slice(0,13);}function excelSerialToDate(serial){
+const excelEpoch=new Date(Date.UTC(1899,11,30));return new Date(excelEpoch.getTime()+Number(serial)*24*60*60*1000);}function getQuarterHourKey(moveTime){
 const date=excelSerialToDate(moveTime);
 const day=String(date.getUTCDate()).padStart(2,"0");
 const months=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -357,624 +144,302 @@ const month=months[date.getUTCMonth()];
 const hour=String(date.getUTCHours()).padStart(2,"0");
 const minute=date.getUTCMinutes();
 const quarterStart=Math.floor(minute/15)*15;
-const quarterEnd=quarterStart+14;
-return `${day}${month}${hour}:${String(quarterStart).padStart(2,"0")}-${hour}:${String(quarterEnd).padStart(2,"0")}`;
-}
-
-/* =========================
-   SEGOT LOGIC
-========================= */
-
-function segotGetLength(value){return String(value).replace("'","").trim();}
-function segotGetBay(queue){const m=normalize(queue).match(/^(\d{2})/);return m?m[1]:null;}
-function segotGetBlock(moveFrom){return clean(moveFrom).substring(0,2).toUpperCase();}
-function segotValidYard(pos){const p=clean(pos).toUpperCase();return /^[A-Z]{2}\d{5}$/.test(p)&&SEGOT_YARD_ORDER.includes(p.substring(0,2));}
-
+const quarterEnd=quarterStart+14;return `${day}${month}${hour}:${String(quarterStart).padStart(2,"0")}-${hour}:${String(quarterEnd).padStart(2,"0")}`;}
+function segotGetLength(value){return String(value).replace("'","").trim();}function segotGetBay(queue){
+const m=normalize(queue).match(/^(\d{2})/);return m?m[1]:null;}function segotGetBlock(moveFrom){return clean(moveFrom).substring(0,2).toUpperCase();}function segotValidYard(pos){
+const p=clean(pos).toUpperCase();return /^[A-Z]{2}\d{5}$/.test(p)&&SEGOT_YARD_ORDER.includes(p.substring(0,2));}
 function segotYardMirroring(rawRows,side){
-const rows=rawRows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load")
-.filter(r=>!isTrue(r["Unit Is OOG?"]))
-.filter(r=>!isTrue(r["Unit is Hazardous?"]))
-.filter(r=>!isTrue(r["Unit is live Reefer ?"]))
-.filter(r=>segotValidYard(r["Move From"]))
-.map(r=>({pod:normalize(r["Unit POD"]),length:segotGetLength(r["Length"]),block:segotGetBlock(r["Move From"]),bay:segotGetBay(r["Queue"])}))
-.filter(r=>r.pod&&r.length&&r.block&&r.bay!==null);
-
+const rows=rawRows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load").filter(r=>!isTrue(r["Unit Is OOG?"])).filter(r=>!isTrue(r["Unit is Hazardous?"])).filter(r=>!isTrue(r["Unit is live Reefer ?"])).filter(r=>segotValidYard(r["Move From"])).map(r=>({pod:normalize(r["Unit POD"]),length:segotGetLength(r["Length"]),block:segotGetBlock(r["Move From"]),bay:segotGetBay(r["Queue"])})).filter(r=>r.pod&&r.length&&r.block&&r.bay!==null);
 const groups=groupBy(rows,r=>`${r.pod}|${r.length}`);
-let finalBlockTotals={},finalBlockMirrored={};
-
-for(const groupKey in groups){
+let finalBlockTotals={},finalBlockMirrored={};for(
+const groupKey in groups){
 const groupRows=groups[groupKey];
 const bayDemand=countBy(groupRows,r=>r.bay);
 const blockTotal=countBy(groupRows,r=>r.block);
 const actualByBlockBay=countBy(groupRows,r=>`${r.block}|${r.bay}`);
 const bayOrder=Object.keys(bayDemand).sort((a,b)=>side==="starboard"?Number(b)-Number(a):Number(a)-Number(b));
-let blockRemaining={...blockTotal},blockMirrored={};
-Object.keys(blockTotal).forEach(block=>blockMirrored[block]=0);
-
-for(const bay of bayOrder){
-let remainingBayDemand=bayDemand[bay];
-for(const block of SEGOT_YARD_ORDER){
-if(!blockRemaining[block])continue;
-if(remainingBayDemand<=0)break;
+let blockRemaining={...blockTotal},blockMirrored={};Object.keys(blockTotal).forEach(block=>blockMirrored[block]=0);for(
+const bay of bayOrder){
+let remainingBayDemand=bayDemand[bay];for(
+const block of SEGOT_YARD_ORDER){if(!blockRemaining[block])continue;if(remainingBayDemand<=0)break;
 const expected=Math.min(blockRemaining[block],remainingBayDemand);
 const actual=actualByBlockBay[`${block}|${bay}`]||0;
-const mirrored=Math.min(actual,expected);
-blockMirrored[block]+=mirrored;
-blockRemaining[block]-=expected;
-remainingBayDemand-=expected;
-}
-}
-
-for(const block in blockTotal){
-finalBlockTotals[block]=(finalBlockTotals[block]||0)+blockTotal[block];
-finalBlockMirrored[block]=(finalBlockMirrored[block]||0)+blockMirrored[block];
-}
-}
-
+const mirrored=Math.min(actual,expected);blockMirrored[block]+=mirrored;blockRemaining[block]-=expected;remainingBayDemand-=expected;}}for(
+const block in blockTotal){finalBlockTotals[block]=(finalBlockTotals[block]||0)+blockTotal[block];finalBlockMirrored[block]=(finalBlockMirrored[block]||0)+blockMirrored[block];}}
 let totalUnits=0,totalMirrored=0;
 const blockResults=Object.keys(finalBlockTotals).map(block=>{
 const total=finalBlockTotals[block];
 const mirrored=finalBlockMirrored[block];
-const percent=total>0?(mirrored/total)*100:0;
-totalUnits+=total;totalMirrored+=mirrored;
-return{block,mirrored,total,percent};
-});
-blockResults.sort((a,b)=>SEGOT_YARD_ORDER.indexOf(a.block)-SEGOT_YARD_ORDER.indexOf(b.block));
-return{finalKPI:totalUnits>0?(totalMirrored/totalUnits)*100:0,validMoves:totalUnits,blockResults};
-}
-
+const percent=total>0?(mirrored/total)*100:0;totalUnits+=total;totalMirrored+=mirrored;return{block,mirrored,total,percent};});blockResults.sort((a,b)=>SEGOT_YARD_ORDER.indexOf(a.block)-SEGOT_YARD_ORDER.indexOf(b.block));return{finalKPI:totalUnits>0?(totalMirrored/totalUnits)*100:0,validMoves:totalUnits,blockResults};}
 function segotValidLoading(moveFrom){
-const pos=clean(moveFrom).toUpperCase();
-if(!pos)return false;
-if(pos.includes("EC")||pos.includes("CAR")||pos.includes("RAMP")||pos.includes("COM")||pos.includes("OOG"))return false;
-return /^[A-Z]{2}\d{5}$/.test(pos);
-}
-
-function segotLoadingPoints(rows){
-const grouped={};
-rows.forEach(row=>{
+const pos=clean(moveFrom).toUpperCase();if(!pos)return false;if(pos.includes("EC")||pos.includes("CAR")||pos.includes("RAMP")||pos.includes("COM")||pos.includes("OOG"))return false;return /^[A-Z]{2}\d{5}$/.test(pos);}function segotLoadingPoints(rows){
+const grouped={};rows.forEach(row=>{
 const moveKind=normalize(row["Move Kind"]).toUpperCase();
 const isOOG=normalize(row["Unit Is OOG?"]).toLowerCase();
-const moveFrom=row["Move From"];
-if(moveKind!=="LOAD"||isOOG==="true"||!segotValidLoading(moveFrom))return;
+const moveFrom=row["Move From"];if(moveKind!=="LOAD"||isOOG==="true"||!segotValidLoading(moveFrom))return;
 const hour=excelSerialDateToHour(row["Move Time"]);
-const qc=normalize(row["Pow Name"]);
-if(!hour||!qc)return;
+const qc=normalize(row["Pow Name"]);if(!hour||!qc)return;
 const block=clean(moveFrom).substring(0,4);
-const key=`${hour}|${qc}`;
-if(!grouped[key])grouped[key]=new Set();
-grouped[key].add(block);
-});
+const key=`${hour}|${qc}`;if(!grouped[key])grouped[key]=new Set();grouped[key].add(block);});
 const details=Object.entries(grouped).map(([key,blocks])=>{
-const [Hour,QC]=key.split("|");
-return{Hour,QC,LP:blocks.size,BlockRows:[...blocks].sort().join(", ")};
-}).sort((a,b)=>a.Hour.localeCompare(b.Hour)||a.QC.localeCompare(b.QC));
-const avg=details.length?details.reduce((s,x)=>s+x.LP,0)/details.length:0;
-return{avgLoadingPoints:Number(avg.toFixed(2)),hourQCObservations:details.length,details};
-}
-
-function segotIsYardTwin(pos){return /^[A-Z]{2}\d{5}$/.test(clean(pos));}
-function segotParseYard(pos){pos=clean(pos);return{block:pos.slice(0,2),row:pos.slice(2,4),bay:pos.slice(4,6),tier:pos.slice(6,7),raw:pos};}
-function parseMoveTo(pos){pos=normalize(pos).replace(/\D/g,"");if(pos.length<5)return null;return{bay:Number(pos.slice(0,-4)),row:pos.slice(-4,-2),tier:pos.slice(-2),raw:pos};}
-function segotPairedYardBay(bay1,bay2){const a=Number(bay1),b=Number(bay2);const min=Math.min(a,b),max=Math.max(a,b);return max-min===1&&min%2===1;}
-function pairedVesselBay(bay1,bay2){return Math.abs(Number(bay1)-Number(bay2))===2;}
-function plannedTwin(a,b){
-const p1=parseMoveTo(a["Move To"]),p2=parseMoveTo(b["Move To"]);
-if(!p1||!p2)return false;
-return normalize(a["Queue"])===normalize(b["Queue"])&&pairedVesselBay(p1.bay,p2.bay)&&p1.row===p2.row&&p1.tier===p2.tier;
-}
-function segotTwinOpportunity(a,b){
-const y1=segotParseYard(a["Move From"]),y2=segotParseYard(b["Move From"]);
-return y1.block===y2.block&&y1.row===y2.row&&y1.tier===y2.tier&&segotPairedYardBay(y1.bay,y2.bay);
-}
-function segotEligibleTwinRows(rows){
-return rows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load"&&normalize(r["Length"]).includes("20")&&!isTrue(r["Unit Is OOG?"])&&!isTrue(r["Unit is live Reefer ?"])&&segotIsYardTwin(r["Move From"]));
-}
-function segotTwinPlanning(rows){return calculateTwinFromEligible(segotEligibleTwinRows(rows),segotTwinOpportunity);}
-
+const [Hour,QC]=key.split("|");return{Hour,QC,LP:blocks.size,BlockRows:[...blocks].sort().join(", ")};}).sort((a,b)=>a.Hour.localeCompare(b.Hour)||a.QC.localeCompare(b.QC));
+const avg=details.length?details.reduce((s,x)=>s+x.LP,0)/details.length:0;return{avgLoadingPoints:Number(avg.toFixed(2)),hourQCObservations:details.length,details};}
+function segotIsYardTwin(pos){return /^[A-Z]{2}\d{5}$/.test(clean(pos));}function segotParseYard(pos){pos=clean(pos);return{block:pos.slice(0,2),row:pos.slice(2,4),bay:pos.slice(4,6),tier:pos.slice(6,7),raw:pos};}function parseMoveTo(pos){pos=normalize(pos).replace(/\D/g,"");if(pos.length<5)return null;return{bay:Number(pos.slice(0,-4)),row:pos.slice(-4,-2),tier:pos.slice(-2),raw:pos};}function segotPairedYardBay(bay1,bay2){
+const a=Number(bay1),b=Number(bay2);
+const min=Math.min(a,b),max=Math.max(a,b);return max-min===1&&min%2===1;}function pairedVesselBay(bay1,bay2){return Math.abs(Number(bay1)-Number(bay2))===2;}function plannedTwin(a,b){
+const p1=parseMoveTo(a["Move To"]),p2=parseMoveTo(b["Move To"]);if(!p1||!p2)return false;return normalize(a["Queue"])===normalize(b["Queue"])&&pairedVesselBay(p1.bay,p2.bay)&&p1.row===p2.row&&p1.tier===p2.tier;}function segotTwinOpportunity(a,b){
+const y1=segotParseYard(a["Move From"]),y2=segotParseYard(b["Move From"]);return y1.block===y2.block&&y1.row===y2.row&&y1.tier===y2.tier&&segotPairedYardBay(y1.bay,y2.bay);}function segotEligibleTwinRows(rows){return rows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load"&&normalize(r["Length"]).includes("20")&&!isTrue(r["Unit Is OOG?"])&&!isTrue(r["Unit is live Reefer ?"])&&segotIsYardTwin(r["Move From"]));}function segotTwinPlanning(rows){return calculateTwinFromEligible(segotEligibleTwinRows(rows),segotTwinOpportunity);}
 function calculateTwinFromEligible(eligible,opportunityFn){
-const candidates=[];
-for(let i=0;i<eligible.length;i++){
-for(let j=i+1;j<eligible.length;j++){
-if(!opportunityFn(eligible[i],eligible[j]))continue;
-candidates.push({i,j,planned:plannedTwin(eligible[i],eligible[j]),seqDiff:Math.abs((Number(eligible[i]["Sequence"])||0)-(Number(eligible[j]["Sequence"])||0))});
-}
-}
-candidates.sort((a,b)=>a.planned!==b.planned?(a.planned?-1:1):a.seqDiff-b.seqDiff);
-const used=new Set(),pairs=[];
-for(const c of candidates){
-if(used.has(c.i)||used.has(c.j))continue;
-used.add(c.i);used.add(c.j);
-pairs.push({row1:eligible[c.i],row2:eligible[c.j],planned:c.planned});
-}
+const candidates=[];for(
+let i=0;i<eligible.length;i++){for(
+let j=i+1;j<eligible.length;j++){if(!opportunityFn(eligible[i],eligible[j]))continue;candidates.push({i,j,planned:plannedTwin(eligible[i],eligible[j]),seqDiff:Math.abs((Number(eligible[i]["Sequence"])||0)-(Number(eligible[j]["Sequence"])||0))});}}candidates.sort((a,b)=>a.planned!==b.planned?(a.planned?-1:1):a.seqDiff-b.seqDiff);
+const used=new Set(),pairs=[];for(
+const c of candidates){if(used.has(c.i)||used.has(c.j))continue;used.add(c.i);used.add(c.j);pairs.push({row1:eligible[c.i],row2:eligible[c.j],planned:c.planned});}
 const opportunityPairs=pairs.length,opportunityContainers=opportunityPairs*2;
-const plannedPairs=pairs.filter(p=>p.planned).length,plannedContainers=plannedPairs*2;
-return{opportunityPairs,plannedPairs,twinPlanningOpportunityBased:opportunityContainers?plannedContainers/opportunityContainers:0,details:pairs};
-}
-
+const plannedPairs=pairs.filter(p=>p.planned).length,plannedContainers=plannedPairs*2;return{opportunityPairs,plannedPairs,twinPlanningOpportunityBased:opportunityContainers?plannedContainers/opportunityContainers:0,details:pairs};}
 function segotRehandles(rows){
 const validLoads=rows.filter(r=>{
 const moveKind=clean(getValue(r,["Move Kind"])).toUpperCase();
 const moveFrom=clean(getValue(r,["Move From"]));
-const isOOG=clean(getValue(r,["Unit Is OOG?","Unit is OOG?"])).toUpperCase()==="TRUE";
-return moveKind==="LOAD"&&!isOOG&&moveFrom.length===7;
-});
-const loadFromYard=validLoads.length,groups={};
-validLoads.forEach(r=>{
+const isOOG=clean(getValue(r,["Unit Is OOG?","Unit is OOG?"])).toUpperCase()==="TRUE";return moveKind==="LOAD"&&!isOOG&&moveFrom.length===7;});
+const loadFromYard=validLoads.length,groups={};validLoads.forEach(r=>{
 const moveFrom=clean(getValue(r,["Move From"]));
 const rowBay=moveFrom.substring(0,6);
 const tier=Number(moveFrom.slice(-1));
 const moveTime=Number(getValue(r,["Move Time","Time/Date"]));
-const container=getContainer(r);
-if(!groups[rowBay])groups[rowBay]=[];
-groups[rowBay].push({rowBay,tier,tierText:tier,moveTime,container,isHazardous:clean(getValue(r,["Unit is Hazardous?","Unit Is Hazardous?"])).toUpperCase()==="TRUE",isSpecial:clean(getValue(r,["Unit is Special Stow?","Unit Is Special Stow?"])).toUpperCase()==="TRUE"});
-});
-return calculateRehandleFromGroups(groups,loadFromYard);
-}
-
-function calculateRehandleFromGroups(groups,loadFromYard){
-const rehandlesList=[];
-Object.keys(groups).forEach(rowBay=>{
-const group=groups[rowBay];
-group.sort((a,b)=>a.tier-b.tier);
-if(group.length<=1||group.length>=6)return;
-const alreadyCounted=new Set();
-for(let i=0;i<group.length-1;i++){
-const causingContainer=group[i];
-for(let j=i+1;j<group.length;j++){
-const rehandledContainer=group[j];
-if(causingContainer.moveTime<rehandledContainer.moveTime){
-const uniqueKey=rowBay+"|"+rehandledContainer.container+"|"+rehandledContainer.tierText;
-if(!alreadyCounted.has(uniqueKey)){
-alreadyCounted.add(uniqueKey);
-let reason="Normal";
-if(rehandledContainer.isHazardous)reason="IMO";
-if(rehandledContainer.isSpecial)reason="Special Stow";
-rehandlesList.push({rowBay,container:rehandledContainer.container,reason});
-}
-}
-}
-}
-});
-const rehandlesCount=rehandlesList.length;
-return{loadFromYard,rehandlesCount,rehandlesPercent:loadFromYard>0?rehandlesCount/loadFromYard*100:0,rehandlesList};
-}
-
+const container=getContainer(r);if(!groups[rowBay])groups[rowBay]=[];groups[rowBay].push({rowBay,tier,tierText:tier,moveTime,container,isHazardous:clean(getValue(r,["Unit is Hazardous?","Unit Is Hazardous?"])).toUpperCase()==="TRUE",isSpecial:clean(getValue(r,["Unit is Special Stow?","Unit Is Special Stow?"])).toUpperCase()==="TRUE"});});return calculateRehandleFromGroups(groups,loadFromYard);}function calculateRehandleFromGroups(groups,loadFromYard){
+const rehandlesList=[];Object.keys(groups).forEach(rowBay=>{
+const group=groups[rowBay];group.sort((a,b)=>a.tier-b.tier);if(group.length<=1||group.length>=6)return;
+const alreadyCounted=new Set();for(
+let i=0;i<group.length-1;i++){
+const causingContainer=group[i];for(
+let j=i+1;j<group.length;j++){
+const rehandledContainer=group[j];if(causingContainer.moveTime<rehandledContainer.moveTime){
+const uniqueKey=rowBay+"|"+rehandledContainer.container+"|"+rehandledContainer.tierText;if(!alreadyCounted.has(uniqueKey)){alreadyCounted.add(uniqueKey);
+let reason="Normal";if(rehandledContainer.isHazardous)reason="IMO";if(rehandledContainer.isSpecial)reason="Special Stow";rehandlesList.push({rowBay,container:rehandledContainer.container,reason});}}}}});
+const rehandlesCount=rehandlesList.length;return{loadFromYard,rehandlesCount,rehandlesPercent:loadFromYard>0?rehandlesCount/loadFromYard*100:0,rehandlesList};}
 function segotLoadFromYardForTravel(row){
-const moveKind=clean(row["Move Kind"]),moveFrom=clean(row["Move From"]),reefer=clean(row["Unit is live Reefer ?"]);
-if(moveFrom.length===5&&moveFrom.slice(-2).toUpperCase()==="RW")return true;
-if(moveKind==="Discharge")return false;
-if(moveFrom.trim().length===7)return true;
-if(reefer!=="FALSE"){
-if(moveFrom.substring(0,1).toUpperCase()==="R")return true;
-if(moveFrom.length===3&&(moveFrom.substring(0,1)==="1"||moveFrom.substring(0,1)==="4"))return true;
-}
-return false;
-}
-function segotYardBlockForTravel(row){
-const moveFrom=clean(row["Move From"]).toUpperCase();
-if(moveFrom.includes("RAMP"))return"RAMP";
-if(moveFrom.startsWith("R"))return"R";
-if(moveFrom.length===7)return moveFrom.substring(0,2);
-if(moveFrom.length===5&&moveFrom.endsWith("RW"))return moveFrom.substring(0,2);
-return"Unknown";
-}
-function segotTravelDistance(rows){
-const validRows=rows.filter(row=>clean(row["Move Kind"])==="Load"&&segotLoadFromYardForTravel(row)&&clean(row["Unit Is OOG?"]).toLowerCase()==="false"&&getNumber(row["Move Distance"])>0);
-return travelFromRows(validRows,row=>segotYardBlockForTravel(row));
-}
-
+const moveKind=clean(row["Move Kind"]),moveFrom=clean(row["Move From"]),reefer=clean(row["Unit is live Reefer ?"]);if(moveFrom.length===5&&moveFrom.slice(-2).toUpperCase()==="RW")return true;if(moveKind==="Discharge")return false;if(moveFrom.trim().length===7)return true;if(reefer!=="FALSE"){if(moveFrom.substring(0,1).toUpperCase()==="R")return true;if(moveFrom.length===3&&(moveFrom.substring(0,1)==="1"||moveFrom.substring(0,1)==="4"))return true;}return false;}function segotYardBlockForTravel(row){
+const moveFrom=clean(row["Move From"]).toUpperCase();if(moveFrom.includes("RAMP"))return"RAMP";if(moveFrom.startsWith("R"))return"R";if(moveFrom.length===7)return moveFrom.substring(0,2);if(moveFrom.length===5&&moveFrom.endsWith("RW"))return moveFrom.substring(0,2);return"Unknown";}function segotTravelDistance(rows){
+const validRows=rows.filter(row=>clean(row["Move Kind"])==="Load"&&segotLoadFromYardForTravel(row)&&clean(row["Unit Is OOG?"]).toLowerCase()==="false"&&getNumber(row["Move Distance"])>0);return travelFromRows(validRows,row=>segotYardBlockForTravel(row));}
 function travelFromRows(validRows,blockFn){
 const totalDistance=validRows.reduce((sum,row)=>sum+getNumber(row["Move Distance"]),0);
-const count=validRows.length,average=count?totalDistance/count:0,byBlock={};
-validRows.forEach(row=>{
-const carrier=clean(row["Carrier"]),block=blockFn(row),key=carrier+"|"+block;
-if(!byBlock[key])byBlock[key]={carrier,block,total:0,count:0};
-byBlock[key].total+=getNumber(row["Move Distance"]);
-byBlock[key].count++;
-});
-const blockDetails=Object.values(byBlock).map(x=>({carrier:x.carrier,block:x.block,count:x.count,average:x.total/x.count})).sort((a,b)=>a.block.localeCompare(b.block));
-return{count,totalDistance,average,blockDetails};
-}
-
-function segotEvacFiltered(rows){
-return rows.filter(r=>{
-const moveKind=normalize(r["Move Kind"]),moveFrom=normalize(r["Move From"]),moveTo=normalize(r["Move To"]),oog=normalize(r["Unit Is OOG?"]).toUpperCase(),freightKind=normalize(r["Freight Kind"]).toUpperCase();
-return moveKind==="Load"&&moveFrom!=="(car)"&&moveFrom.length===7&&moveTo!=="EC"&&oog!=="TRUE"&&!(freightKind==="MTY"&&moveFrom.startsWith("EUR"));
-});
-}
-function getMoveTime(v){return v===null||v===undefined||v===""?0:Number(v);}
-function evacuationCalc(rows,keyFn,scenario,scenario1Only){
-const filtered=rows,groups={};
-filtered.forEach(r=>{const key=keyFn(r);if(!groups[key])groups[key]=[];groups[key].push(r);});
-const details=[];
-Object.keys(groups).forEach(key=>{
+const count=validRows.length,average=count?totalDistance/count:0,byBlock={};validRows.forEach(row=>{
+const carrier=clean(row["Carrier"]),block=blockFn(row),key=carrier+"|"+block;if(!byBlock[key])byBlock[key]={carrier,block,total:0,count:0};byBlock[key].total+=getNumber(row["Move Distance"]);byBlock[key].count++;});
+const blockDetails=Object.values(byBlock).map(x=>({carrier:x.carrier,block:x.block,count:x.count,average:x.total/x.count})).sort((a,b)=>a.block.localeCompare(b.block));return{count,totalDistance,average,blockDetails};}
+function segotEvacFiltered(rows){return rows.filter(r=>{
+const moveKind=normalize(r["Move Kind"]),moveFrom=normalize(r["Move From"]),moveTo=normalize(r["Move To"]),oog=normalize(r["Unit Is OOG?"]).toUpperCase(),freightKind=normalize(r["Freight Kind"]).toUpperCase();return moveKind==="Load"&&moveFrom!=="(car)"&&moveFrom.length===7&&moveTo!=="EC"&&oog!=="TRUE"&&!(freightKind==="MTY"&&moveFrom.startsWith("EUR"));});}function getMoveTime(v){return v===null||v===undefined||v===""?0:Number(v);}function evacuationCalc(rows,keyFn,scenario,scenario1Only){
+const filtered=rows,groups={};filtered.forEach(r=>{
+const key=keyFn(r);if(!groups[key])groups[key]=[];groups[key].push(r);});
+const details=[];Object.keys(groups).forEach(key=>{
 const groupRows=groups[key].sort((a,b)=>getMoveTime(a["Move Time"])-getMoveTime(b["Move Time"]));
 const total=groupRows.length;
 let thresholdHours;if(total<=27)thresholdHours=1;else if(total<=54)thresholdHours=2;else thresholdHours=3;
-let runs=[],currentRun=1;
-for(let i=1;i<groupRows.length;i++){
-const diffHours=(getMoveTime(groupRows[i]["Move Time"])-getMoveTime(groupRows[i-1]["Move Time"]))*24;
-if(diffHours>=thresholdHours){runs.push(currentRun);currentRun=1;}else currentRun++;
-}
-runs.push(currentRun);
+let runs=[],currentRun=1;for(
+let i=1;i<groupRows.length;i++){
+const diffHours=(getMoveTime(groupRows[i]["Move Time"])-getMoveTime(groupRows[i-1]["Move Time"]))*24;if(diffHours>=thresholdHours){runs.push(currentRun);currentRun=1;}else currentRun++;}runs.push(currentRun);
 const evacuated=scenario1Only||scenario==="1"?runs[0]:Math.max(...runs);
-const evacuationPercent=total>0?evacuated/total*100:0;
-details.push({block:key,stack:key,total,thresholdHours,evacuated,evacuationPercent});
-});
-const finalResult=details.length?details.reduce((s,r)=>s+r.evacuationPercent,0)/details.length:0;
-details.sort((a,b)=>(a.block||a.stack).localeCompare(b.block||b.stack));
-return{finalResult,details};
-}
-function segotRowsEvacuation(rows,scenario){return evacuationCalc(segotEvacFiltered(rows),r=>normalize(r["Move From"]).substring(0,4),scenario,false);}
-function segotStacksEvacuation(rows){return evacuationCalc(segotEvacFiltered(rows),r=>normalize(r["Move From"]).substring(0,6),"1",true);}
-
+const evacuationPercent=total>0?evacuated/total*100:0;details.push({block:key,stack:key,total,thresholdHours,evacuated,evacuationPercent});});
+const finalResult=details.length?details.reduce((s,r)=>s+r.evacuationPercent,0)/details.length:0;details.sort((a,b)=>(a.block||a.stack).localeCompare(b.block||b.stack));return{finalResult,details};}function segotRowsEvacuation(rows,scenario){return evacuationCalc(segotEvacFiltered(rows),r=>normalize(r["Move From"]).substring(0,4),scenario,false);}function segotStacksEvacuation(rows){return evacuationCalc(segotEvacFiltered(rows),r=>normalize(r["Move From"]).substring(0,6),"1",true);}
 function segotYardClashes(rows){
 const validLoads=rows.filter(r=>{
 const moveKind=clean(getValue(r,["Move Kind"])).toUpperCase();
 const moveFrom=clean(getValue(r,["Move From"])).toUpperCase();
-const isOOG=clean(getValue(r,["Unit Is OOG?","Unit is OOG?"])).toUpperCase()==="TRUE";
-return moveKind==="LOAD"&&!isOOG&&moveFrom.length===7&&!moveFrom.includes("RAMP");
-});
-const buckets={};
-validLoads.forEach(r=>{
+const isOOG=clean(getValue(r,["Unit Is OOG?","Unit is OOG?"])).toUpperCase()==="TRUE";return moveKind==="LOAD"&&!isOOG&&moveFrom.length===7&&!moveFrom.includes("RAMP");});
+const buckets={};validLoads.forEach(r=>{
 const moveFrom=clean(getValue(r,["Move From"])).toUpperCase();
-const moveTime=Number(getValue(r,["Move Time","Time/Date"]));
-if(!moveTime)return;
-const blockRow=moveFrom.substring(0,4),block=blockRow.substring(0,2),rowNum=Number(blockRow.substring(2,4));
-if(!block||isNaN(rowNum))return;
-const quarterHour=getQuarterHourKey(moveTime);
-if(!buckets[quarterHour])buckets[quarterHour]={};
-if(!buckets[quarterHour][block])buckets[quarterHour][block]=new Set();
-buckets[quarterHour][block].add(rowNum);
-});
-let totalRows=0,totalClashedRows=0,details=[];
-Object.keys(buckets).sort().forEach(quarterHour=>{
-const quarterClashedRows=new Set();
-Object.keys(buckets[quarterHour]).forEach(block=>{
-const rowsArray=Array.from(buckets[quarterHour][block]).sort((a,b)=>a-b);
-totalRows+=rowsArray.length;
-const clashed=new Set();
-for(let i=0;i<rowsArray.length-1;i++){
-if(rowsArray[i+1]-rowsArray[i]===1){clashed.add(rowsArray[i]);clashed.add(rowsArray[i+1]);}
-}
-clashed.forEach(rowNum=>quarterClashedRows.add(block+String(rowNum).padStart(2,"0")));
-});
-if(quarterClashedRows.size>0){
-totalClashedRows+=quarterClashedRows.size;
-details.push({quarterHour,rowsClashed:Array.from(quarterClashedRows).sort().join(" , ")});
-}
-});
-return{totalRows,totalClashedRows,clashPercent:totalRows>0?totalClashedRows/totalRows*100:0,details};
-}
-
-/* =========================
-   DKAAR LOGIC
-========================= */
-
-function mapDKAARReeferBlock(rowNumber){
-if(rowNumber===3||rowNumber===4)return"RS";
-if(rowNumber>=13&&rowNumber<=20)return"RM";
-if(rowNumber>=5&&rowNumber<=12)return"RN";
-return"R";
-}
-function parseDKAARYardPosition(pos){
-pos=clean(pos).toUpperCase();
-if(!pos||pos.includes("NORD")||pos.includes("COM")||pos.includes("AAR")||pos.includes("RAMP"))return null;
-let m=pos.match(/^(\d{2})(OGA|OGB|OGI)(\d{2})([A-Z])$/);
-if(m)return{raw:pos,block:m[2],row:m[1]+m[2],bay:m[3],tier:m[4],rowBay:m[1]+m[2]+m[3],isReefer:false};
-m=pos.match(/^(\d{3})R(\d{2})([A-Z])$/);
-if(m){const rowNum=Number(m[1]);const mappedBlock=mapDKAARReeferBlock(rowNum);return{raw:pos,block:mappedBlock,row:m[1]+"R",bay:m[2],tier:m[3],rowBay:m[1]+"R"+m[2],isReefer:true};}
-m=pos.match(/^(\d{2,3})([A-Z]\d?)(\d{2})([A-Z])$/);
-if(m)return{raw:pos,block:m[2],row:m[1]+m[2],bay:m[3],tier:m[4],rowBay:m[1]+m[2]+m[3],isReefer:false};
-return null;
-}
-function dkaarTierValue(tier){return String(tier||"").toUpperCase().charCodeAt(0)-64;}
-function dkaarBlockOrder(isReefer){return isReefer?DKAAR_REEFER_BLOCK_ORDER:DKAAR_NORMAL_BLOCK_ORDER;}
-
+const moveTime=Number(getValue(r,["Move Time","Time/Date"]));if(!moveTime)return;
+const blockRow=moveFrom.substring(0,4),block=blockRow.substring(0,2),rowNum=Number(blockRow.substring(2,4));if(!block||isNaN(rowNum))return;
+const quarterHour=getQuarterHourKey(moveTime);if(!buckets[quarterHour])buckets[quarterHour]={};if(!buckets[quarterHour][block])buckets[quarterHour][block]=new Set();buckets[quarterHour][block].add(rowNum);});
+let totalRows=0,totalClashedRows=0,details=[];Object.keys(buckets).sort().forEach(quarterHour=>{
+const quarterClashedRows=new Set();Object.keys(buckets[quarterHour]).forEach(block=>{
+const rowsArray=Array.from(buckets[quarterHour][block]).sort((a,b)=>a-b);totalRows+=rowsArray.length;
+const clashed=new Set();for(
+let i=0;i<rowsArray.length-1;i++){if(rowsArray[i+1]-rowsArray[i]===1){clashed.add(rowsArray[i]);clashed.add(rowsArray[i+1]);}}clashed.forEach(rowNum=>quarterClashedRows.add(block+String(rowNum).padStart(2,"0")));});if(quarterClashedRows.size>0){totalClashedRows+=quarterClashedRows.size;details.push({quarterHour,rowsClashed:Array.from(quarterClashedRows).sort().join(" , ")});}});return{totalRows,totalClashedRows,clashPercent:totalRows>0?totalClashedRows/totalRows*100:0,details};}
+function mapDKAARReeferBlock(rowNumber){if(rowNumber===3||rowNumber===4)return"RS";if(rowNumber>=13&&rowNumber<=20)return"RM";if(rowNumber>=5&&rowNumber<=12)return"RN";return"R";}function parseDKAARYardPosition(pos){pos=clean(pos).toUpperCase();if(!pos||pos.includes("NORD")||pos.includes("COM")||pos.includes("AAR")||pos.includes("RAMP"))return null;
+let m=pos.match(/^(\d{2})(OGA|OGB|OGI)(\d{2})([A-Z])$/);if(m)return{raw:pos,block:m[2],row:m[1]+m[2],bay:m[3],tier:m[4],rowBay:m[1]+m[2]+m[3],isReefer:false};m=pos.match(/^(\d{3})R(\d{2})([A-Z])$/);if(m){
+const rowNum=Number(m[1]);
+const mappedBlock=mapDKAARReeferBlock(rowNum);return{raw:pos,block:mappedBlock,row:m[1]+"R",bay:m[2],tier:m[3],rowBay:m[1]+"R"+m[2],isReefer:true};}m=pos.match(/^(\d{2,3})([A-Z]\d?)(\d{2})([A-Z])$/);if(m)return{raw:pos,block:m[2],row:m[1]+m[2],bay:m[3],tier:m[4],rowBay:m[1]+m[2]+m[3],isReefer:false};return null;}function dkaarTierValue(tier){return String(tier||"").toUpperCase().charCodeAt(0)-64;}function dkaarBlockOrder(isReefer){return isReefer?DKAAR_REEFER_BLOCK_ORDER:DKAAR_NORMAL_BLOCK_ORDER;}
 function dkaarYardMirroring(rawRows,side){
-const rows=rawRows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load")
-.filter(r=>!isTrue(r["Unit Is OOG?"]))
-.filter(r=>!isTrue(r["Unit is Hazardous?"]))
-.map(r=>{
-const parsed=parseDKAARYardPosition(r["Move From"]);if(!parsed)return null;
-return{pod:normalize(r["Unit POD"]),length:String(r["Length"]||"").replace("'","").trim(),block:parsed.block,bay:segotGetBay(r["Queue"]),isReefer:parsed.isReefer};
-}).filter(r=>r&&r.pod&&r.length&&r.block&&r.bay!==null);
-
+const rows=rawRows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load").filter(r=>!isTrue(r["Unit Is OOG?"])).filter(r=>!isTrue(r["Unit is Hazardous?"])).map(r=>{
+const parsed=parseDKAARYardPosition(r["Move From"]);if(!parsed)return null;return{pod:normalize(r["Unit POD"]),length:String(r["Length"]||"").replace("'","").trim(),block:parsed.block,bay:segotGetBay(r["Queue"]),isReefer:parsed.isReefer};}).filter(r=>r&&r.pod&&r.length&&r.block&&r.bay!==null);
 const groups=groupBy(rows,r=>`${r.pod}|${r.length}|${r.isReefer?"REEFER":"NORMAL"}`);
-let finalBlockTotals={},finalBlockMirrored={};
-
-for(const groupKey in groups){
+let finalBlockTotals={},finalBlockMirrored={};for(
+const groupKey in groups){
 const groupRows=groups[groupKey],isReefer=groupRows[0].isReefer,blockOrder=dkaarBlockOrder(isReefer);
 const bayDemand=countBy(groupRows,r=>r.bay),blockTotal=countBy(groupRows,r=>r.block),actualByBlockBay=countBy(groupRows,r=>`${r.block}|${r.bay}`);
 const bayOrder=Object.keys(bayDemand).sort((a,b)=>side==="starboard"?Number(b)-Number(a):Number(a)-Number(b));
-let blockRemaining={...blockTotal},blockMirrored={};
-Object.keys(blockTotal).forEach(block=>blockMirrored[block]=0);
-for(const bay of bayOrder){
-let remainingBayDemand=bayDemand[bay];
-for(const block of blockOrder){
-if(!blockRemaining[block])continue;
-if(remainingBayDemand<=0)break;
+let blockRemaining={...blockTotal},blockMirrored={};Object.keys(blockTotal).forEach(block=>blockMirrored[block]=0);for(
+const bay of bayOrder){
+let remainingBayDemand=bayDemand[bay];for(
+const block of blockOrder){if(!blockRemaining[block])continue;if(remainingBayDemand<=0)break;
 const expected=Math.min(blockRemaining[block],remainingBayDemand);
 const actual=actualByBlockBay[`${block}|${bay}`]||0;
-const mirrored=Math.min(actual,expected);
-blockMirrored[block]+=mirrored;
-blockRemaining[block]-=expected;
-remainingBayDemand-=expected;
-}
-}
-for(const block in blockTotal){
-finalBlockTotals[block]=(finalBlockTotals[block]||0)+blockTotal[block];
-finalBlockMirrored[block]=(finalBlockMirrored[block]||0)+blockMirrored[block];
-}
-}
+const mirrored=Math.min(actual,expected);blockMirrored[block]+=mirrored;blockRemaining[block]-=expected;remainingBayDemand-=expected;}}for(
+const block in blockTotal){finalBlockTotals[block]=(finalBlockTotals[block]||0)+blockTotal[block];finalBlockMirrored[block]=(finalBlockMirrored[block]||0)+blockMirrored[block];}}
 let totalUnits=0,totalMirrored=0;
 const blockResults=Object.keys(finalBlockTotals).map(block=>{
-const total=finalBlockTotals[block],mirrored=finalBlockMirrored[block],percent=total>0?mirrored/total*100:0;
-totalUnits+=total;totalMirrored+=mirrored;return{block,mirrored,total,percent};
-});
-const fullOrder=[...DKAAR_NORMAL_BLOCK_ORDER,...DKAAR_REEFER_BLOCK_ORDER];
-blockResults.sort((a,b)=>fullOrder.indexOf(a.block)-fullOrder.indexOf(b.block));
-return{finalKPI:totalUnits>0?totalMirrored/totalUnits*100:0,validMoves:totalUnits,blockResults};
-}
-
+const total=finalBlockTotals[block],mirrored=finalBlockMirrored[block],percent=total>0?mirrored/total*100:0;totalUnits+=total;totalMirrored+=mirrored;return{block,mirrored,total,percent};});
+const fullOrder=[...DKAAR_NORMAL_BLOCK_ORDER,...DKAAR_REEFER_BLOCK_ORDER];blockResults.sort((a,b)=>fullOrder.indexOf(a.block)-fullOrder.indexOf(b.block));return{finalKPI:totalUnits>0?totalMirrored/totalUnits*100:0,validMoves:totalUnits,blockResults};}
 function dkaarLoadingPoints(rows){
-const grouped={};
-rows.forEach(row=>{
-const moveKind=normalize(row["Move Kind"]).toUpperCase(),isOOG=normalize(row["Unit Is OOG?"]).toLowerCase(),parsed=parseDKAARYardPosition(row["Move From"]);
-if(moveKind!=="LOAD"||isOOG==="true"||!parsed)return;
-const hour=excelSerialDateToHour(row["Move Time"]),qc=normalize(row["Pow Name"]);
-if(!hour||!qc)return;
-const key=`${hour}|${qc}`;
-if(!grouped[key])grouped[key]=new Set();
-grouped[key].add(parsed.row);
-});
+const grouped={};rows.forEach(row=>{
+const moveKind=normalize(row["Move Kind"]).toUpperCase(),isOOG=normalize(row["Unit Is OOG?"]).toLowerCase(),parsed=parseDKAARYardPosition(row["Move From"]);if(moveKind!=="LOAD"||isOOG==="true"||!parsed)return;
+const hour=excelSerialDateToHour(row["Move Time"]),qc=normalize(row["Pow Name"]);if(!hour||!qc)return;
+const key=`${hour}|${qc}`;if(!grouped[key])grouped[key]=new Set();grouped[key].add(parsed.row);});
 const details=Object.entries(grouped).map(([key,rowsSet])=>{const[Hour,QC]=key.split("|");return{Hour,QC,LP:rowsSet.size,BlockRows:[...rowsSet].sort().join(", ")}}).sort((a,b)=>a.Hour.localeCompare(b.Hour)||a.QC.localeCompare(b.QC));
-const avg=details.length?details.reduce((s,x)=>s+x.LP,0)/details.length:0;
-return{avgLoadingPoints:Number(avg.toFixed(2)),hourQCObservations:details.length,details};
-}
-
-function dkaarTwinBayPair(bay1,bay2){const a=Number(bay1),b=Number(bay2),min=Math.min(a,b),max=Math.max(a,b);return max-min===2&&min%4===1;}
-function dkaarEligibleTwinRows(rows){
-return rows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load"&&normalize(r["Length"]).includes("20")&&!isTrue(r["Unit Is OOG?"])&&!isTrue(r["Unit is live Reefer ?"])&&parseDKAARYardPosition(r["Move From"]));
-}
-function dkaarTwinOpportunity(a,b){
-const y1=parseDKAARYardPosition(a["Move From"]),y2=parseDKAARYardPosition(b["Move From"]);
-if(!y1||!y2)return false;
-return y1.block===y2.block&&y1.row===y2.row&&y1.tier===y2.tier&&dkaarTwinBayPair(y1.bay,y2.bay);
-}
-function dkaarTwinPlanning(rows){return calculateTwinFromEligible(dkaarEligibleTwinRows(rows),dkaarTwinOpportunity);}
-
-function dkaarRehandles(rows){
+const avg=details.length?details.reduce((s,x)=>s+x.LP,0)/details.length:0;return{avgLoadingPoints:Number(avg.toFixed(2)),hourQCObservations:details.length,details};}
+function dkaarTwinBayPair(bay1,bay2){
+const a=Number(bay1),b=Number(bay2),min=Math.min(a,b),max=Math.max(a,b);return max-min===2&&min%4===1;}function dkaarEligibleTwinRows(rows){return rows.filter(r=>normalize(r["Move Kind"]).toLowerCase()==="load"&&normalize(r["Length"]).includes("20")&&!isTrue(r["Unit Is OOG?"])&&!isTrue(r["Unit is live Reefer ?"])&&parseDKAARYardPosition(r["Move From"]));}function dkaarTwinOpportunity(a,b){
+const y1=parseDKAARYardPosition(a["Move From"]),y2=parseDKAARYardPosition(b["Move From"]);if(!y1||!y2)return false;return y1.block===y2.block&&y1.row===y2.row&&y1.tier===y2.tier&&dkaarTwinBayPair(y1.bay,y2.bay);}function dkaarTwinPlanning(rows){return calculateTwinFromEligible(dkaarEligibleTwinRows(rows),dkaarTwinOpportunity);}function dkaarRehandles(rows){
 const validLoads=rows.filter(r=>{
 const moveKind=clean(getValue(r,["Move Kind"])).toUpperCase();
 const isOOG=clean(getValue(r,["Unit Is OOG?","Unit is OOG?"])).toUpperCase()==="TRUE";
-const parsed=parseDKAARYardPosition(getValue(r,["Move From"]));
-return moveKind==="LOAD"&&!isOOG&&parsed;
-});
-const loadFromYard=validLoads.length,groups={};
-validLoads.forEach(r=>{
+const parsed=parseDKAARYardPosition(getValue(r,["Move From"]));return moveKind==="LOAD"&&!isOOG&&parsed;});
+const loadFromYard=validLoads.length,groups={};validLoads.forEach(r=>{
 const parsed=parseDKAARYardPosition(getValue(r,["Move From"]));
 const moveTime=Number(getValue(r,["Move Time","Time/Date"]));
-const container=getContainer(r);
-if(!groups[parsed.rowBay])groups[parsed.rowBay]=[];
-groups[parsed.rowBay].push({rowBay:parsed.rowBay,tier:dkaarTierValue(parsed.tier),tierText:parsed.tier,moveTime,container,isHazardous:clean(getValue(r,["Unit is Hazardous?","Unit Is Hazardous?"])).toUpperCase()==="TRUE",isSpecial:clean(getValue(r,["Unit is Special Stow?","Unit Is Special Stow?"])).toUpperCase()==="TRUE"});
-});
-return calculateRehandleFromGroups(groups,loadFromYard);
-}
-
-function dkaarTravelDistance(rows){
+const container=getContainer(r);if(!groups[parsed.rowBay])groups[parsed.rowBay]=[];groups[parsed.rowBay].push({rowBay:parsed.rowBay,tier:dkaarTierValue(parsed.tier),tierText:parsed.tier,moveTime,container,isHazardous:clean(getValue(r,["Unit is Hazardous?","Unit Is Hazardous?"])).toUpperCase()==="TRUE",isSpecial:clean(getValue(r,["Unit is Special Stow?","Unit Is Special Stow?"])).toUpperCase()==="TRUE"});});return calculateRehandleFromGroups(groups,loadFromYard);}function dkaarTravelDistance(rows){
 const validRows=rows.filter(row=>{
-const parsed=parseDKAARYardPosition(row["Move From"]);
-return clean(row["Move Kind"])==="Load"&&parsed&&clean(row["Unit Is OOG?"]).toLowerCase()==="false"&&getNumber(row["Move Distance"])>0;
-});
-return travelFromRows(validRows,row=>{const p=parseDKAARYardPosition(row["Move From"]);return p?p.block:"Unknown";});
-}
-
-function dkaarEvacFiltered(rows){
-return rows.filter(r=>{
+const parsed=parseDKAARYardPosition(row["Move From"]);return clean(row["Move Kind"])==="Load"&&parsed&&clean(row["Unit Is OOG?"]).toLowerCase()==="false"&&getNumber(row["Move Distance"])>0;});return travelFromRows(validRows,row=>{
+const p=parseDKAARYardPosition(row["Move From"]);return p?p.block:"Unknown";});}
+function dkaarEvacFiltered(rows){return rows.filter(r=>{
 const parsed=parseDKAARYardPosition(r["Move From"]);
-const moveKind=normalize(r["Move Kind"]),moveTo=normalize(r["Move To"]),oog=normalize(r["Unit Is OOG?"]).toUpperCase(),freightKind=normalize(r["Freight Kind"]).toUpperCase();
-return moveKind==="Load"&&parsed&&moveTo!=="EC"&&oog!=="TRUE"&&!(freightKind==="MTY"&&normalize(r["Move From"]).startsWith("EUR"));
-});
-}
-function dkaarRowsEvacuation(rows,scenario){return evacuationCalc(dkaarEvacFiltered(rows),r=>parseDKAARYardPosition(r["Move From"]).row,scenario,false);}
-function dkaarStacksEvacuation(rows){return evacuationCalc(dkaarEvacFiltered(rows),r=>parseDKAARYardPosition(r["Move From"]).rowBay,"1",true);}
-
-function dkaarRowBayParts(rowBay){
-const match=String(rowBay||"").match(/^(\d+)([A-Z0-9]+)(\d{2})$/);
-if(!match)return null;
-return{rowNum:Number(match[1]),block:match[2],bay:match[3]};
-}
-function dkaarYardClashes(rows){
+const moveKind=normalize(r["Move Kind"]),moveTo=normalize(r["Move To"]),oog=normalize(r["Unit Is OOG?"]).toUpperCase(),freightKind=normalize(r["Freight Kind"]).toUpperCase();return moveKind==="Load"&&parsed&&moveTo!=="EC"&&oog!=="TRUE"&&!(freightKind==="MTY"&&normalize(r["Move From"]).startsWith("EUR"));});}function dkaarRowsEvacuation(rows,scenario){return evacuationCalc(dkaarEvacFiltered(rows),r=>parseDKAARYardPosition(r["Move From"]).row,scenario,false);}function dkaarStacksEvacuation(rows){return evacuationCalc(dkaarEvacFiltered(rows),r=>parseDKAARYardPosition(r["Move From"]).rowBay,"1",true);}function dkaarRowBayParts(rowBay){
+const match=String(rowBay||"").match(/^(\d+)([A-Z0-9]+)(\d{2})$/);if(!match)return null;return{rowNum:Number(match[1]),block:match[2],bay:match[3]};}function dkaarYardClashes(rows){
 const validLoads=rows.filter(r=>{
 const moveKind=clean(getValue(r,["Move Kind"])).toUpperCase();
 const isOOG=clean(getValue(r,["Unit Is OOG?","Unit is OOG?"])).toUpperCase()==="TRUE";
+const parsed=parseDKAARYardPosition(getValue(r,["Move From"]));return moveKind==="LOAD"&&!isOOG&&parsed;});
+const buckets={};validLoads.forEach(r=>{
 const parsed=parseDKAARYardPosition(getValue(r,["Move From"]));
-return moveKind==="LOAD"&&!isOOG&&parsed;
-});
-const buckets={};
-validLoads.forEach(r=>{
-const parsed=parseDKAARYardPosition(getValue(r,["Move From"]));
-const moveTime=Number(getValue(r,["Move Time","Time/Date"]));
-if(!moveTime||!parsed)return;
-const quarterHour=getQuarterHourKey(moveTime),parts=dkaarRowBayParts(parsed.rowBay);
-if(!parts)return;
-const blockBayKey=parts.block+"|"+parts.bay;
-if(!buckets[quarterHour])buckets[quarterHour]={};
-if(!buckets[quarterHour][blockBayKey])buckets[quarterHour][blockBayKey]=new Set();
-buckets[quarterHour][blockBayKey].add(parsed.rowBay);
-});
-let totalRowBays=0,totalClashedRowBays=0,details=[];
-Object.keys(buckets).sort().forEach(quarterHour=>{
-const quarterClashedRowBays=new Set();
-Object.keys(buckets[quarterHour]).forEach(blockBayKey=>{
-const rowBayArray=Array.from(buckets[quarterHour][blockBayKey]).sort((a,b)=>dkaarRowBayParts(a).rowNum-dkaarRowBayParts(b).rowNum);
-totalRowBays+=rowBayArray.length;
-const clashed=new Set();
-for(let i=0;i<rowBayArray.length-1;i++){
-const currentParts=dkaarRowBayParts(rowBayArray[i]),nextParts=dkaarRowBayParts(rowBayArray[i+1]);
-if(currentParts&&nextParts&&currentParts.block===nextParts.block&&currentParts.bay===nextParts.bay&&Math.abs(nextParts.rowNum-currentParts.rowNum)===1){
-clashed.add(rowBayArray[i]);clashed.add(rowBayArray[i+1]);
-}
-}
-clashed.forEach(x=>quarterClashedRowBays.add(x));
-});
-if(quarterClashedRowBays.size>0){
-totalClashedRowBays+=quarterClashedRowBays.size;
-details.push({quarterHour,rowsClashed:Array.from(quarterClashedRowBays).sort().join(" , ")});
-}
-});
-return{totalRows:totalRowBays,totalClashedRows:totalClashedRowBays,clashPercent:totalRowBays>0?totalClashedRowBays/totalRowBays*100:0,details};
-}
+const moveTime=Number(getValue(r,["Move Time","Time/Date"]));if(!moveTime||!parsed)return;
+const quarterHour=getQuarterHourKey(moveTime),parts=dkaarRowBayParts(parsed.rowBay);if(!parts)return;
+const blockBayKey=parts.block+"|"+parts.bay;if(!buckets[quarterHour])buckets[quarterHour]={};if(!buckets[quarterHour][blockBayKey])buckets[quarterHour][blockBayKey]=new Set();buckets[quarterHour][blockBayKey].add(parsed.rowBay);});
+let totalRowBays=0,totalClashedRowBays=0,details=[];Object.keys(buckets).sort().forEach(quarterHour=>{
+const quarterClashedRowBays=new Set();Object.keys(buckets[quarterHour]).forEach(blockBayKey=>{
+const rowBayArray=Array.from(buckets[quarterHour][blockBayKey]).sort((a,b)=>dkaarRowBayParts(a).rowNum-dkaarRowBayParts(b).rowNum);totalRowBays+=rowBayArray.length;
+const clashed=new Set();for(
+let i=0;i<rowBayArray.length-1;i++){
+const currentParts=dkaarRowBayParts(rowBayArray[i]),nextParts=dkaarRowBayParts(rowBayArray[i+1]);if(currentParts&&nextParts&&currentParts.block===nextParts.block&&currentParts.bay===nextParts.bay&&Math.abs(nextParts.rowNum-currentParts.rowNum)===1){clashed.add(rowBayArray[i]);clashed.add(rowBayArray[i+1]);}}clashed.forEach(x=>quarterClashedRowBays.add(x));});if(quarterClashedRowBays.size>0){totalClashedRowBays+=quarterClashedRowBays.size;details.push({quarterHour,rowsClashed:Array.from(quarterClashedRowBays).sort().join(" , ")});}});return{totalRows:totalRowBays,totalClashedRows:totalClashedRowBays,clashPercent:totalRowBays>0?totalClashedRowBays/totalRowBays*100:0,details};}
+/* ========================= ALTERNATION KPI ========================= */
+function normalizeAltLength(length){length=normalize(length);if(length==="45'")return"40'";return length;}function getAltVesselBayDeck(row){if(normalize(row["Move Kind"])!=="Load")return"";return normalize(row["Queue"]).substring(0,3);}function getAltVesselBayDeckLift(row){if(normalize(row["Move Kind"])!=="Load")return"N/A";return getAltVesselBayDeck(row)+" "+normalizeAltLength(row["Length"]);}function checkAlternation40(values,index,ratio){
+const current=values[index];
+let compared=[];for(
+let step=1;step<ratio;step++){
+const nextValue=values[index+step];if(nextValue===undefined)continue;compared.push(nextValue);if(current===nextValue)return{alternated:false,compared};}return{alternated:true,compared};}function checkAlternation20Twin(values,index,ratio){
+const current=values[index];
+let compared=[];for(
+let step=1;step<ratio;step++){
+const nextValue=values[index+(step*2)];if(nextValue===undefined)continue;compared.push(nextValue);if(current===nextValue)return{alternated:false,compared};}return{alternated:true,compared};}
+function calculateGroupAlternation(rows, ratio, is20){
+    rows.sort((a,b)=>a._BaySequence-b._BaySequence);
 
-const SEGOT={
-yardMirroring:segotYardMirroring,
-loadingPoints:segotLoadingPoints,
-twinPlanning:segotTwinPlanning,
-rehandles:segotRehandles,
-travelDistance:segotTravelDistance,
-rowsEvacuation:segotRowsEvacuation,
-stacksEvacuation:segotStacksEvacuation,
-yardClashes:segotYardClashes
-};
+    // Rule 1: Any queue with only 1 container is considered alternated
+    if(rows.length === 1){
+        rows[0]._ComparedWith = "Single container queue";
+        rows[0]._Alternated = true;
+        return 1;
+    }
 
-const DKAAR={
-yardMirroring:dkaarYardMirroring,
-loadingPoints:dkaarLoadingPoints,
-twinPlanning:dkaarTwinPlanning,
-rehandles:dkaarRehandles,
-travelDistance:dkaarTravelDistance,
-rowsEvacuation:dkaarRowsEvacuation,
-stacksEvacuation:dkaarStacksEvacuation,
-yardClashes:dkaarYardClashes
-};
+    // Rule 2: Any 20ft queue with only 2 containers is considered alternated
+    if(is20 && rows.length === 2){
+        rows.forEach(row => {
+            row._ComparedWith = "20ft queue with 2 containers";
+            row._Alternated = true;
+        });
+        return 2;
+    }
 
-/* =========================
-   RENDERING
-========================= */
+    const yardRows = rows.map(r => r._YardRow);
+    let count = 0;
 
-function renderYard(result){
-document.getElementById("yardKPI").innerText=result.finalKPI.toFixed(2)+"%";
-document.getElementById("yardMoves").innerText="Valid moves: "+result.validMoves.toLocaleString();
-const tbody=document.getElementById("yardTable");
-tbody.innerHTML="";
-result.blockResults.forEach(r=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td><b>${escapeHtml(r.block)}</b></td><td>${r.mirrored}</td><td>${r.total}</td><td>${r.percent.toFixed(2)}%</td><td><div class="bar-wrap"><div class="bar" style="width:${Math.min(r.percent,100)}%"></div></div></td>`;
-tbody.appendChild(tr);
-});
+    rows.forEach((row, index) => {
+        let result;
+
+        if(is20){
+            result = checkAlternation20Twin(yardRows, index, ratio);
+        }else{
+            result = checkAlternation40(yardRows, index, ratio);
+        }
+
+        row._ComparedWith = result.compared.join(" / ");
+
+        if(result.compared.length === 0){
+            row._Alternated = false;
+        }else{
+            row._Alternated = result.alternated;
+        }
+
+        if(row._Alternated) count++;
+    });
+
+    return count;
 }
+function calculateAlternationGeneric(rows,ratio20,ratio40,getYardInfoFn){
+const prepared=[];rows.forEach(row=>{
+const info=getYardInfoFn(row);if(!info)return;
+const seq=Number(clean(row["Sequence"]));
+const len=normalizeAltLength(row["Length"]);
+const item={...row,_YardPosition:info.yardPosition,_YardRow:info.yardRow,_LoadFromYard:info.loadFromYard?"Yes":"No",_BaySequence:seq,_Length:len,_VesselBayDeckLift:getAltVesselBayDeckLift(row),_Alternated:false,_ComparedWith:""};prepared.push(item);});
+const validRows=prepared.filter(r=>clean(r["Move Kind"]).toUpperCase()==="LOAD"&&clean(r._LoadFromYard).toUpperCase()==="YES"&&!isNaN(r._BaySequence)&&(r._Length.includes("20")||r._Length.includes("40")));
+const groups={};validRows.forEach(row=>{
+const vessel=clean(row["Carrier"]);
+const vesselName=clean(row["Carrier Name"]);
+const queue=clean(row._VesselBayDeckLift);
+const key=vessel+"|"+vesselName+"|"+queue;if(!groups[key])groups[key]={vessel,vesselName,queue,length:row._Length,rows:[]};groups[key].rows.push(row);});
+let totalAlt40=0,totalAlt20=0,queueRows=[];Object.values(groups).forEach(g=>{
+const is40=g.queue.includes("40'");
+const is20=g.queue.includes("20'");
+const ratio=is40?ratio40:ratio20;
+const altCount=calculateGroupAlternation(g.rows,ratio,is20);if(is40)totalAlt40+=altCount;if(is20)totalAlt20+=altCount;
+const moves=g.rows.length;
+const pct=moves?altCount/moves:0;queueRows.push({vessel:g.vessel,vesselName:g.vesselName,queue:g.queue,length:g.length,ratio,moves,altCount,pct});});
+const loadFromYard=validRows.length,totalAlt=totalAlt40+totalAlt20,alternationPct=loadFromYard?totalAlt/loadFromYard*100:0;queueRows.sort((a,b)=>a.vessel!==b.vessel?a.vessel.localeCompare(b.vessel):a.queue.localeCompare(b.queue));validRows.sort((a,b)=>{
+const qa=clean(a._VesselBayDeckLift),qb=clean(b._VesselBayDeckLift);if(qa!==qb)return qa.localeCompare(qb);return a._BaySequence-b._BaySequence;});return{loadFromYard,totalAlt,totalAlt40,totalAlt20,alternationPct,queueRows,detailRows:validRows};}
+function segotAlternation(rows,ratio20,ratio40){return calculateAlternationGeneric(rows,ratio20,ratio40,row=>{
+const moveKind=clean(row["Move Kind"]);
+const moveFrom=clean(row["Move From"]);if(moveKind!=="Load")return null;if(!segotValidYard(moveFrom))return{yardPosition:"Heap Area",yardRow:"HP",loadFromYard:false};return{yardPosition:moveFrom,yardRow:moveFrom.substring(0,4),loadFromYard:true};});}
+function dkaarAlternation(rows,ratio20,ratio40){return calculateAlternationGeneric(rows,ratio20,ratio40,row=>{
+const moveKind=clean(row["Move Kind"]);
+const parsed=parseDKAARYardPosition(row["Move From"]);if(moveKind!=="Load")return null;if(!parsed)return{yardPosition:"Heap Area",yardRow:"HP",loadFromYard:false};return{yardPosition:parsed.raw,yardRow:parsed.row,loadFromYard:true};});}
 
-function renderLoading(result){
-document.getElementById("loadingKPI").innerText=result.avgLoadingPoints.toFixed(2);
-document.getElementById("loadingObs").innerText="Hour + QC observations: "+result.hourQCObservations;
-const tbody=document.getElementById("loadingTable");
-tbody.innerHTML="";
-result.details.forEach(r=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td>${escapeHtml(r.Hour)}</td><td>${escapeHtml(r.QC)}</td><td><b>${r.LP}</b></td><td>${escapeHtml(r.BlockRows)}</td>`;
-tbody.appendChild(tr);
-});
-}
+const SEGOT={yardMirroring:segotYardMirroring,loadingPoints:segotLoadingPoints,twinPlanning:segotTwinPlanning,rehandles:segotRehandles,travelDistance:segotTravelDistance,rowsEvacuation:segotRowsEvacuation,stacksEvacuation:segotStacksEvacuation,yardClashes:segotYardClashes,alternation:segotAlternation};
 
-function renderTwin(result){
-document.getElementById("twinKPI").innerText=(result.twinPlanningOpportunityBased*100).toFixed(2)+"%";
-document.getElementById("twinObs").innerText=`Opportunities ${result.opportunityPairs} Pairs | Planned ${result.plannedPairs} Pairs`;
-const tbody=document.getElementById("twinTable");
-tbody.innerHTML="";
-result.details.forEach(p=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td class="${p.planned?"good":"bad"}">${p.planned?"Planned Twin":"Missed Twin"}</td>
-<td>${escapeHtml(getContainer(p.row1))}</td><td>${escapeHtml(p.row1["Move From"])}</td><td>${escapeHtml(p.row1["Move To"])}</td><td>${escapeHtml(p.row1["Queue"])}</td><td>${escapeHtml(p.row1["Sequence"])}</td>
-<td>${escapeHtml(getContainer(p.row2))}</td><td>${escapeHtml(p.row2["Move From"])}</td><td>${escapeHtml(p.row2["Move To"])}</td><td>${escapeHtml(p.row2["Queue"])}</td><td>${escapeHtml(p.row2["Sequence"])}</td>`;
-tbody.appendChild(tr);
-});
-}
-
-function renderRehandles(result){
-document.getElementById("rehandlesKPI").innerText=result.rehandlesPercent.toFixed(2)+"%";
-document.getElementById("rehandlesObs").innerText="Load from Yard: "+result.loadFromYard.toLocaleString()+" | Rehandles: "+result.rehandlesCount.toLocaleString();
-const tbody=document.getElementById("rehandlesTable");
-tbody.innerHTML="";
-result.rehandlesList.forEach(r=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td>${escapeHtml(r.rowBay)}</td><td>${escapeHtml(r.container)}</td><td>${escapeHtml(r.reason)}</td>`;
-tbody.appendChild(tr);
-});
-}
-
-function renderTravelDistance(result){
-document.getElementById("travelDistanceKPI").innerText=result.average.toFixed(2);
-document.getElementById("travelDistanceObs").innerText="Containers considered: "+result.count.toLocaleString();
-const tbody=document.getElementById("travelDistanceTable");
-tbody.innerHTML="";
-result.blockDetails.forEach(r=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td>${escapeHtml(r.carrier)}</td><td>${escapeHtml(r.block)}</td><td>${r.count}</td><td>${r.average.toFixed(2)}</td>`;
-tbody.appendChild(tr);
-});
-}
-
-function renderRowsEvacuation(result,scenario){
-document.getElementById("rowsEvacuationKPI").innerText=result.finalResult.toFixed(2)+"%";
-document.getElementById("rowsEvacuationObs").innerText="Scenario "+scenario+" | Rows considered: "+result.details.length.toLocaleString();
-const tbody=document.getElementById("rowsEvacuationTable");
-tbody.innerHTML="";
-result.details.forEach(r=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td>${escapeHtml(r.block)}</td><td>${r.total}</td><td>${r.thresholdHours} hour(s)</td><td>${r.evacuated}</td><td>${r.evacuationPercent.toFixed(2)}%</td>`;
-tbody.appendChild(tr);
-});
-}
-
-function renderStacksEvacuation(result){
-document.getElementById("stacksEvacuationKPI").innerText=result.finalResult.toFixed(2)+"%";
-document.getElementById("stacksEvacuationObs").innerText="Scenario 1 only | Stacks considered: "+result.details.length.toLocaleString();
-const tbody=document.getElementById("stacksEvacuationTable");
-tbody.innerHTML="";
-result.details.forEach(r=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td>${escapeHtml(r.stack)}</td><td>${r.total}</td><td>${r.thresholdHours} hour(s)</td><td>${r.evacuated}</td><td>${r.evacuationPercent.toFixed(2)}%</td>`;
-tbody.appendChild(tr);
-});
-}
-
-function renderYardClashes(result,terminal){
-document.getElementById("yardClashesKPI").innerText=result.clashPercent.toFixed(2)+"%";
+const DKAAR={yardMirroring:dkaarYardMirroring,loadingPoints:dkaarLoadingPoints,twinPlanning:dkaarTwinPlanning,rehandles:dkaarRehandles,travelDistance:dkaarTravelDistance,rowsEvacuation:dkaarRowsEvacuation,stacksEvacuation:dkaarStacksEvacuation,yardClashes:dkaarYardClashes,alternation:dkaarAlternation};
+function renderYard(result){document.getElementById("yardKPI").innerText=result.finalKPI.toFixed(2)+"%";document.getElementById("yardMoves").innerText="Valid moves: "+result.validMoves.toLocaleString();
+const tbody=document.getElementById("yardTable");tbody.innerHTML="";result.blockResults.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td><b>${escapeHtml(r.block)}</b></td><td>${r.mirrored}</td><td>${r.total}</td><td>${r.percent.toFixed(2)}%</td><td><div class="bar-wrap"><div class="bar" style="width:${Math.min(r.percent,100)}%"></div></div></td>`;tbody.appendChild(tr);});}
+function renderLoading(result){document.getElementById("loadingKPI").innerText=result.avgLoadingPoints.toFixed(2);document.getElementById("loadingObs").innerText="Hour + QC observations: "+result.hourQCObservations;
+const tbody=document.getElementById("loadingTable");tbody.innerHTML="";result.details.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(r.Hour)}</td><td>${escapeHtml(r.QC)}</td><td><b>${r.LP}</b></td><td>${escapeHtml(r.BlockRows)}</td>`;tbody.appendChild(tr);});}
+function renderTwin(result){document.getElementById("twinKPI").innerText=(result.twinPlanningOpportunityBased*100).toFixed(2)+"%";document.getElementById("twinObs").innerText=`Opportunities ${result.opportunityPairs} Pairs | Planned ${result.plannedPairs} Pairs`;
+const tbody=document.getElementById("twinTable");tbody.innerHTML="";result.details.forEach(p=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td class="${p.planned?"good":"bad"}">${p.planned?"Planned Twin":"Missed Twin"}</td><td>${escapeHtml(getContainer(p.row1))}</td><td>${escapeHtml(p.row1["Move From"])}</td><td>${escapeHtml(p.row1["Move To"])}</td><td>${escapeHtml(p.row1["Queue"])}</td><td>${escapeHtml(p.row1["Sequence"])}</td><td>${escapeHtml(getContainer(p.row2))}</td><td>${escapeHtml(p.row2["Move From"])}</td><td>${escapeHtml(p.row2["Move To"])}</td><td>${escapeHtml(p.row2["Queue"])}</td><td>${escapeHtml(p.row2["Sequence"])}</td>`;tbody.appendChild(tr);});}
+function renderRehandles(result){document.getElementById("rehandlesKPI").innerText=result.rehandlesPercent.toFixed(2)+"%";document.getElementById("rehandlesObs").innerText="Load from Yard: "+result.loadFromYard.toLocaleString()+" | Rehandles: "+result.rehandlesCount.toLocaleString();
+const tbody=document.getElementById("rehandlesTable");tbody.innerHTML="";result.rehandlesList.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(r.rowBay)}</td><td>${escapeHtml(r.container)}</td><td>${escapeHtml(r.reason)}</td>`;tbody.appendChild(tr);});}
+function renderTravelDistance(result){document.getElementById("travelDistanceKPI").innerText=result.average.toFixed(2);document.getElementById("travelDistanceObs").innerText="Containers considered: "+result.count.toLocaleString();
+const tbody=document.getElementById("travelDistanceTable");tbody.innerHTML="";result.blockDetails.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(r.carrier)}</td><td>${escapeHtml(r.block)}</td><td>${r.count}</td><td>${r.average.toFixed(2)}</td>`;tbody.appendChild(tr);});}
+function renderRowsEvacuation(result,scenario){document.getElementById("rowsEvacuationKPI").innerText=result.finalResult.toFixed(2)+"%";document.getElementById("rowsEvacuationObs").innerText="Scenario "+scenario+" | Rows considered: "+result.details.length.toLocaleString();
+const tbody=document.getElementById("rowsEvacuationTable");tbody.innerHTML="";result.details.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(r.block)}</td><td>${r.total}</td><td>${r.thresholdHours} hour(s)</td><td>${r.evacuated}</td><td>${r.evacuationPercent.toFixed(2)}%</td>`;tbody.appendChild(tr);});}
+function renderStacksEvacuation(result){document.getElementById("stacksEvacuationKPI").innerText=result.finalResult.toFixed(2)+"%";document.getElementById("stacksEvacuationObs").innerText="Scenario 1 only | Stacks considered: "+result.details.length.toLocaleString();
+const tbody=document.getElementById("stacksEvacuationTable");tbody.innerHTML="";result.details.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(r.stack)}</td><td>${r.total}</td><td>${r.thresholdHours} hour(s)</td><td>${r.evacuated}</td><td>${r.evacuationPercent.toFixed(2)}%</td>`;tbody.appendChild(tr);});}
+function renderYardClashes(result,terminal){document.getElementById("yardClashesKPI").innerText=result.clashPercent.toFixed(2)+"%";
 const label=terminal==="DKAAR"?"Total Row Bays: ":"Total Rows: ";
-const clashLabel=terminal==="DKAAR"?" | Row Bays Clashed: ":" | Rows Clashed: ";
-document.getElementById("yardClashesObs").innerText=label+result.totalRows.toLocaleString()+clashLabel+result.totalClashedRows.toLocaleString();
-const tbody=document.getElementById("yardClashesTable");
-tbody.innerHTML="";
-result.details.forEach(d=>{
-const tr=document.createElement("tr");
-tr.innerHTML=`<td>${escapeHtml(d.quarterHour)}</td><td>${escapeHtml(d.rowsClashed)}</td>`;
-tbody.appendChild(tr);
-});
-}
-
-/* =========================
-   HELPERS
-========================= */
-
-function groupBy(array,keyFn){
-return array.reduce((acc,item)=>{
-const key=keyFn(item);
-if(!acc[key])acc[key]=[];
-acc[key].push(item);
-return acc;
-},{});
-}
-
-function countBy(array,keyFn){
-return array.reduce((acc,item)=>{
-const key=keyFn(item);
-acc[key]=(acc[key]||0)+1;
-return acc;
-},{});
-}
+const clashLabel=terminal==="DKAAR"?" | Row Bays Clashed: ":" | Rows Clashed: ";document.getElementById("yardClashesObs").innerText=label+result.totalRows.toLocaleString()+clashLabel+result.totalClashedRows.toLocaleString();
+const tbody=document.getElementById("yardClashesTable");tbody.innerHTML="";result.details.forEach(d=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(d.quarterHour)}</td><td>${escapeHtml(d.rowsClashed)}</td>`;tbody.appendChild(tr);});}
+function renderAlternation(result){document.getElementById("alternationKPI").innerText=result.alternationPct.toFixed(2)+"%";document.getElementById("alternationObs").innerText="Load from Yard: "+result.loadFromYard.toLocaleString()+" | AltCount: "+result.totalAlt.toLocaleString()+" | 40': "+result.totalAlt40.toLocaleString()+" | 20': "+result.totalAlt20.toLocaleString();
+const qBody=document.getElementById("alternationQueueTable");qBody.innerHTML="";result.queueRows.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(r.vessel)}</td><td>${escapeHtml(r.vesselName)}</td><td>${escapeHtml(r.queue)}</td><td>${escapeHtml(r.length)}</td><td>${r.ratio}</td><td>${r.moves}</td><td>${r.altCount}</td><td class="${r.pct>=0.75?"good":"bad"}">${(r.pct*100).toFixed(2)}%</td>`;qBody.appendChild(tr);});
+const dBody=document.getElementById("alternationDetailTable");dBody.innerHTML="";result.detailRows.forEach(r=>{
+const tr=document.createElement("tr");tr.innerHTML=`<td>${escapeHtml(r["Carrier"])}</td><td>${escapeHtml(r._VesselBayDeckLift)}</td><td>${escapeHtml(r["Sequence"])}</td><td>${escapeHtml(r._YardPosition)}</td><td>${escapeHtml(r._YardRow)}</td><td>${escapeHtml(r._Length)}</td><td>${escapeHtml(r._ComparedWith)}</td><td class="${r._Alternated?"good":"bad"}">${r._Alternated?"Yes":"No"}</td>`;dBody.appendChild(tr);});}
+function groupBy(array,keyFn){return array.reduce((acc,item)=>{
+const key=keyFn(item);if(!acc[key])acc[key]=[];acc[key].push(item);return acc;},{});}function countBy(array,keyFn){return array.reduce((acc,item)=>{
+const key=keyFn(item);acc[key]=(acc[key]||0)+1;return acc;},{});}
 </script>
-
 </body>
 </html>
